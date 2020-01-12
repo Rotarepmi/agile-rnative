@@ -1,19 +1,28 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 interface Props {
     data: {
         id: string;
         title: string;
     };
+    setDetailsVisible: () => void;
 }
 
-const KanbanColumnItemView: React.FC<Props> = ({ data, children }) => {
+const KanbanColumnItemView: React.FC<Props> = ({ data, setDetailsVisible }) => {
     return (
-        <View>
+        <TouchableOpacity style={styles.container} onPress={setDetailsVisible}>
             <Text>{data.title}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: "#fff",
+        marginTop: 10,
+        padding: 20,
+    },
+});
 
 export default KanbanColumnItemView;

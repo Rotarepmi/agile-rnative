@@ -1,1 +1,1 @@
-export { default as KanbanColumnItem } from "./KanbanColumnItemView";
+export { default as KanbanColumnItem } from "./KanbanColumnItemContainer";

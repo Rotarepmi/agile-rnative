@@ -21,7 +21,12 @@ const KanbanColumnView: React.FC<Props> = ({ data, children }) => {
     return (
         <View style={styles.container}>
             <ColumnHeader title={data.title} id={data.id} />
-            <FlatList data={data.items} renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />} />
+
+            <FlatList
+                contentContainerStyle={styles.flatList}
+                data={data.items}
+                renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />}
+            />
         </View>
     );
 };
@@ -31,6 +36,12 @@ const styles = StyleSheet.create({
         flex: 1,
         width: SCREEN_DIMENSIONS.width,
         height: "auto",
+    },
+    flatList: {
+        paddingTop: 0,
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingBottom: 10,
     },
 });
 
