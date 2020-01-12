@@ -2,33 +2,26 @@ import React from "react";
 import { StyleSheet, Dimensions, View, Text, FlatList } from "react-native";
 
 import { KanbanColumnItem } from "../columnItem";
+import ColumnHeader from "./components/ColumnHeader";
 
 const SCREEN_DIMENSIONS = Dimensions.get("screen");
 
-const KanbanColumnView: React.FC = ({ children }) => {
-    const data = [
-        {
-            id: "jeden",
-            title: "jeden",
-        },
-        {
-            id: "dwa",
-            title: "dwa",
-        },
-        {
-            id: "trzy",
-            title: "trzy",
-        },
-        {
-            id: "cztery",
-            title: "cztery",
-        },
-    ];
+interface Props {
+    data: {
+        id: string;
+        title: string;
+        items: {
+            id: string;
+            title: string;
+        }[];
+    };
+}
 
+const KanbanColumnView: React.FC<Props> = ({ data, children }) => {
     return (
         <View style={styles.container}>
-            {children}
-            <FlatList data={data} renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />} />
+            <ColumnHeader title={data.title} id={data.id} />
+            <FlatList data={data.items} renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />} />
         </View>
     );
 };
@@ -38,7 +31,6 @@ const styles = StyleSheet.create({
         flex: 1,
         width: SCREEN_DIMENSIONS.width,
         height: "auto",
-        padding: 10,
     },
 });
 

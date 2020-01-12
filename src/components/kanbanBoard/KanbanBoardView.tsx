@@ -3,22 +3,15 @@ import { StyleSheet, ScrollView, View, Text } from "react-native";
 
 import { KanbanColumn} from "./column";
 
+import { columns } from "../../utils/data";
+
 const KanbanBoardView: React.FC = () => {
     return (
         <View style={styles.container}>
             <ScrollView horizontal scrollEnabled pagingEnabled style={{ flex: 1 }} contentContainerStyle={styles.scrollView}>
-                <KanbanColumn>
-                    <Text>Backlog</Text>
-                </KanbanColumn>
-                <KanbanColumn>
-                    <Text>To do</Text>
-                </KanbanColumn>
-                <KanbanColumn>
-                    <Text>Ongoing</Text>
-                </KanbanColumn>
-                <KanbanColumn>
-                    <Text>Done</Text>
-                </KanbanColumn>
+                {
+                    columns.map(col => <KanbanColumn data={col} key={col.id} />)
+                }
             </ScrollView>
         </View>
     );
