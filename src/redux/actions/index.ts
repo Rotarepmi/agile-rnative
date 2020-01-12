@@ -6,3 +6,10 @@ export const tasksFetchSuccess = (columns: Column[]) => {
         columns
     }
 };
+
+export const updateTasksList = (columns: Column[]) => {
+    return {
+        type: "UPDATE_TASKS_LIST",
+        columns
+    }
+};

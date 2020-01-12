@@ -4,6 +4,10 @@ export const tasks = (state = { columns: [] }, action) => {
             return {
                 columns: [...action.columns],
             }
+        case "UPDATE_TASKS_LIST":
+            return {
+                columns: [...action.columns],
+            }
         default:
             return state
     }

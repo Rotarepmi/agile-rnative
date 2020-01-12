@@ -1,23 +1,25 @@
 import React from "react";
 import { StyleSheet, Dimensions, View, Text, FlatList } from "react-native";
 
-import { KanbanColumnItem } from "../columnItem";
-import ColumnHeader from "./components/ColumnHeader";
 import { Column } from "../../../utils/Types";
+import { KanbanColumnItem } from "../columnItem";
+import { AddNewTask, ColumnHeader } from "./components";
 
 const SCREEN_DIMENSIONS = Dimensions.get("screen");
 
 interface Props {
-    data: Column
+    data: Column;
+    handleAddTaskClick: () => void;
 }
 
-const KanbanColumnView: React.FC<Props> = ({ data, children }) => {
+const KanbanColumnView: React.FC<Props> = ({ data, handleAddTaskClick, children }) => {
     return (
         <View style={styles.container}>
             <ColumnHeader title={data.title} id={data.id} />
 
             <FlatList
                 contentContainerStyle={styles.flatList}
+                ListFooterComponent={() => <AddNewTask handleAddTaskClick={handleAddTaskClick}/>}
                 data={data.tasks}
                 renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />}
             />
