@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://fv-zep.j-mandra.agile.exp.direct",
   "packagerNgrokUrl": "https://packager.fv-zep.j-mandra.agile.exp.direct",
-  "ngrokPid": 80413,
+  "ngrokPid": 1353,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 80389
+  "packagerPid": 1328
 }
