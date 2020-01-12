@@ -3,18 +3,12 @@ import { StyleSheet, Dimensions, View, Text, FlatList } from "react-native";
 
 import { KanbanColumnItem } from "../columnItem";
 import ColumnHeader from "./components/ColumnHeader";
+import { Column } from "../../../utils/Types";
 
 const SCREEN_DIMENSIONS = Dimensions.get("screen");
 
 interface Props {
-    data: {
-        id: string;
-        title: string;
-        items: {
-            id: string;
-            title: string;
-        }[];
-    };
+    data: Column
 }
 
 const KanbanColumnView: React.FC<Props> = ({ data, children }) => {
@@ -24,7 +18,7 @@ const KanbanColumnView: React.FC<Props> = ({ data, children }) => {
 
             <FlatList
                 contentContainerStyle={styles.flatList}
-                data={data.items}
+                data={data.tasks}
                 renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />}
             />
         </View>

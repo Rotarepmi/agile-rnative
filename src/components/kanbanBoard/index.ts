@@ -1,1 +1,1 @@
-export { default as KanbanBoard } from "./KanbanBoardView";
+export { default as KanbanBoard } from "./KanbanBoardContainer";

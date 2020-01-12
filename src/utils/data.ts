@@ -2,7 +2,7 @@ const columns = [
     {
         id: "col1",
         title: "Backlog",
-        items: [{
+        tasks: [{
             id: "item1",
             title: "Item one"
         },
@@ -18,7 +18,7 @@ const columns = [
     {
         id: "col2",
         title: "In progress",
-        items: [{
+        tasks: [{
             id: "item4",
             title: "Item four"
         },
@@ -34,7 +34,7 @@ const columns = [
     {
         id: "col3",
         title: "Testing",
-        items: [{
+        tasks: [{
             id: "item7",
             title: "Item seven"
         },
@@ -46,7 +46,7 @@ const columns = [
     {
         id: "col4",
         title: "Done",
-        items: [{
+        tasks: [{
             id: "item9",
             title: "Item nine"
         },]
