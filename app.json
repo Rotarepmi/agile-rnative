@@ -12,6 +12,10 @@
       "ios",
       "android",
       "web"
-    ]
+    ],
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "black"
+    }
   }
 }
