@@ -1,1 +1,1 @@
-export { default as TaskDetails } from "./TaskDetailsView";
+export { default as TaskDetails } from "./TaskDetailsContainer";
