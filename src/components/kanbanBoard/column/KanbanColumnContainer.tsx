@@ -39,19 +39,6 @@ const KanbanColumnContainer: React.FC<Props> = ({ data }) => {
     }
 
     function handleAddTaskClick() {
-        // const newColumn = { ...column };
-
-        // newColumn.tasks.push({
-        //     title: "",
-        //     temporary: true,
-        //     id: `${Date.now()}`,
-        // });
-
-        // db.ref("/").set({
-        //     columns
-        // });
-
-        // setColumn(newColumn);
         setAddingTask(true);
     }
 
@@ -60,31 +47,31 @@ const KanbanColumnContainer: React.FC<Props> = ({ data }) => {
     }
 
     function handleSaveClick() {
-        const updatedData = {...data};
-        const updatedColumns = {...columns};
-        
+        const updatedData = { ...data };
+        const updatedColumns = { ...columns };
+        const timestamp = Date.now();
+
         updatedData.tasks.push({
-            id: `${Date.now()}`,
-            title: newTaskTitle
+            id: `${timestamp}`,
+            title: newTaskTitle,
         });
-        
+
         updatedColumns[data.id] = updatedData;
 
-        db.collection("columns").doc(data.id).update(updatedData).then(() => dispatch(updateTasksList(updatedColumns)));;
+        db.collection("tasks")
+            .doc(`${timestamp}`)
+            .set({ title: newTaskTitle, description: "", createDate: timestamp, modDate: timestamp })
+            .catch(e => console.log(e));
+
+        db.collection("columns")
+            .doc(data.id)
+            .update(updatedData)
+            .then(() => dispatch(updateTasksList(updatedColumns)))
+            .catch(e => console.log(e));
+
         setAddingTask(false);
         Keyboard.dismiss();
     }
-    // function submitNewTask() {
-    //     const newColumns = [...columns];
-    //     const ind = newColumns.findIndex(c => data.id === c.id);
-
-    //     newColumns[ind].tasks.push({
-    //         title: "",
-    //         id: "new_task",
-    //     });
-
-    //     dispatch(updateTasksList(newColumns));
-    // }
 
     return (
         <KanbanColumnView
