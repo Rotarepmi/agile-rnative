@@ -6,8 +6,17 @@ import { store } from "./redux/store";
 
 import { KanbanBoard } from "./components/kanbanBoard";
 import { MenuBar } from "./components/menuBar";
+import { YellowBox } from "react-native";
 
 const Main: React.FC = () => {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
+    const _console = { ...console };
+    console.warn = message => {
+        if (message.indexOf("Setting a timer") <= -1) {
+            _console.warn(message);
+        }
+    };
+
     return (
         <Provider store={store}>
             <View style={styles.container}>
