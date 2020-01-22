@@ -43,7 +43,7 @@ const KanbanColumnView: React.FC<Props> = ({
                 /> */}
                 <ScrollView>
                     {data.tasks.map(item => (
-                        <KanbanColumnItem key={item.id} data={item} />
+                        <KanbanColumnItem key={item.id} data={item} columnId={data.id} />
                     ))}
                     {addingTask && (
                         <KanbanNewColumnItem

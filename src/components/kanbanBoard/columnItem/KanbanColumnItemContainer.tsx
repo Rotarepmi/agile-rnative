@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+
 import KanbanColumnItemView from "./KanbanColumnItemView";
 import { TaskDetails } from "../taskDetails";
+import { Column } from "../../../utils/Types";
 
 interface Props {
     data: {
         id: string;
         title: string;
     };
+    columnId: Column["id"];
 }
 
-const KanbanColumnItemContainer: React.FC<Props> = ({ data }) => {
+const KanbanColumnItemContainer: React.FC<Props> = ({ data, columnId }) => {
     const [detailsVisible, setDetailsVisible] = useState(false);
 
     function changeDetailsVisible() {
@@ -18,7 +21,12 @@ const KanbanColumnItemContainer: React.FC<Props> = ({ data }) => {
 
     return (
         <React.Fragment>
-            <TaskDetails data={data} setDetailsVisible={() => setDetailsVisible(!detailsVisible)} detailsVisible={detailsVisible} />
+            <TaskDetails
+                data={data}
+                setDetailsVisible={() => setDetailsVisible(!detailsVisible)}
+                detailsVisible={detailsVisible}
+                columnId={columnId}
+            />
             <KanbanColumnItemView data={data} setDetailsVisible={changeDetailsVisible} />
         </React.Fragment>
     );
