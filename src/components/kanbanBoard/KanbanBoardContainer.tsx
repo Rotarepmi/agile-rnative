@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { db } from "../../utils/firebase";
 import { tasksFetchSuccess } from "../../redux/actions";
-import { columns as data } from "../../utils/data";
 import KanbanBoardView from "./KanbanBoardView";
 
 const KanbanBoardContainer: React.FC = () => {
