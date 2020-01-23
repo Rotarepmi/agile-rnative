@@ -4,7 +4,7 @@ import { StyleSheet, View, StatusBar } from "react-native";
 
 import { store } from "./redux/store";
 
-import { KanbanBoard } from "./components/kanbanBoard";
+import { KanbanBoard } from "./screens/kanbanBoard";
 import { MenuBar } from "./components/menuBar";
 import { YellowBox } from "react-native";
 
