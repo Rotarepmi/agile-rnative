@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import firebase from "../utils/firebase";
 
 interface Props {
     navigation: any;
@@ -10,22 +11,19 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    function handleLogin() {
-        // TODO: Firebase stuff...
-        console.log("handleLogin");
+    function handleSignIn() {
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(() => navigation.navigate("MainScreen"))
+            .catch(e => setErrorMessage(e.errorMessage));
     }
 
     return (
         <View style={styles.container}>
             <Text>Login</Text>
             {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            <TextInput
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholder="Email"
-                onChangeText={email => setEmail(email)}
-                value={email}
-            />
+            <TextInput style={styles.textInput} autoCapitalize="none" placeholder="Email" onChangeText={email => setEmail(email)} value={email} />
             <TextInput
                 secureTextEntry
                 style={styles.textInput}
@@ -34,7 +32,7 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
                 onChangeText={password => setPassword(password)}
                 value={password}
             />
-            <Button title="Login" onPress={handleLogin} />
+            <Button title="Login" onPress={handleSignIn} />
             <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate("SignUp")} />
         </View>
     );

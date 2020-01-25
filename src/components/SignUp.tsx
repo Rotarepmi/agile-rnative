@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import firebase from "../utils/firebase";
 
 interface Props {
     navigation: any;
@@ -11,21 +12,18 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     function handleSignUp() {
-        // TODO: Firebase stuff...
-        console.log("handleSignUp");
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(() => navigation.navigate("MainScreen"))
+            .catch(e => setErrorMessage(e.errorMessage));
     }
 
     return (
         <View style={styles.container}>
             <Text>Sign Up</Text>
             {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            <TextInput
-                placeholder="Email"
-                autoCapitalize="none"
-                style={styles.textInput}
-                onChangeText={email => setEmail(email)}
-                value={email}
-            />
+            <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} />
             <TextInput
                 secureTextEntry
                 placeholder="Password"

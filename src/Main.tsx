@@ -1,12 +1,28 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { StyleSheet, View, StatusBar } from "react-native";
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
 
 import { store } from "./redux/store";
 
 import { KanbanBoard } from "./screens/kanbanBoard";
-import { MenuBar } from "./components/menuBar";
+import MainScreen from "./screens/Main";
+import { MenuBar, Loading, SignIn, SignUp } from "./components";
 import { YellowBox } from "react-native";
+
+const AppContainer = createAppContainer(
+    createSwitchNavigator(
+        {
+            Loading,
+            SignUp,
+            SignIn,
+            MainScreen
+        },
+        {
+            initialRouteName: "Loading",
+        },
+    ),
+);
 
 const Main: React.FC = () => {
     YellowBox.ignoreWarnings(["Setting a timer"]);
@@ -22,7 +38,8 @@ const Main: React.FC = () => {
             <View style={styles.container}>
                 <StatusBar backgroundColor="black" barStyle="light-content" />
                 <MenuBar />
-                <KanbanBoard />
+                <AppContainer />
+                {/* <KanbanBoard /> */}
             </View>
         </Provider>
     );
