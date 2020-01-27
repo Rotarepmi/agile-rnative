@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://fv-zep.j-mandra.agile.exp.direct",
-  "packagerNgrokUrl": "https://packager.fv-zep.j-mandra.agile.exp.direct",
-  "ngrokPid": 1874,
+  "expoServerPort": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 1847
+  "packagerPort": null,
+  "packagerPid": null
 }
