@@ -8,7 +8,8 @@ interface Props {
 const Loading: React.FC<Props> = ({ navigation }) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            navigation.navigate(user ? "MainScreen" : "SignUp");
+            const route = user ? (user.displayName ? "MainScreen" : "UserSettings") : "SignUp";
+            navigation.navigate(route);
         });
     }, []);
 

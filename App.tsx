@@ -2,34 +2,44 @@ import React from "react";
 import { Provider } from "react-redux";
 import { StyleSheet, View, StatusBar } from "react-native";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
-import { YellowBox, Dimensions } from "react-native";
+import { YellowBox } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
+// import { createStackNavigator } from "react-navigation-stack";
 
 import { store } from "./src/redux/store";
 
 import MainScreen from "./src/screens/MainScreen";
 import { KanbanBoard } from "./src/screens/kanbanBoard";
-import { MenuBar, Loading, SignIn, SignUp } from "./src/components";
+import { Loading, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
 // import SideMenu from "./src/components/SideMenu";
 
-const DrawerNavigator = createDrawerNavigator(
+// const Stack = createStackNavigator(
+//     {
+//         NewProject
+//     }
+// )
+
+const Dashboard = createDrawerNavigator(
     {
         MainScreen,
-        KanbanBoard
+        KanbanBoard,
     },
-    // {
-    //     contentComponent: SideMenu,
-    //     drawerWidth: Dimensions.get("window").width - 120,
-    // },
+    {
+        initialRouteName: "MainScreen",
+        // contentComponent: SideMenu,
+        // drawerWidth: Dimensions.get("window").width - 120,
+    },
 );
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
+            Dashboard,
             Loading,
             SignUp,
             SignIn,
-            DrawerNavigator,
+            NewProject,
+            UserSettings,
         },
         {
             initialRouteName: "Loading",

@@ -15,7 +15,7 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then(() => navigation.navigate("MainScreen"))
+            .then(() => navigation.navigate("Dashboard"))
             .catch(e => setErrorMessage(e.errorMessage));
     }
 

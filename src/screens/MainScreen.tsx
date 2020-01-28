@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
+import { NavigationSwitchProp } from "react-navigation";
 
 import firebase, { db } from "../utils/firebase";
 
 interface Props {
-    navigation: any;
+    navigation: NavigationSwitchProp;
 }
 
 const MainScreen: React.FC<Props> = ({ navigation }) => {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        const { currentUser } = firebase.auth();
+        const currentUser = firebase.auth().currentUser;
         setCurrentUser(currentUser);
+
         db.collection("users")
             .doc(currentUser.uid)
             .get()
-            .then(qSnap => console.log(qSnap.data()));
+            .then(qSnap => console.log("QSNAP", qSnap.data()));
     }, []);
 
     return (
         <View style={styles.container}>
             <Text>Hi {currentUser && currentUser.displayName}!</Text>
-            <Button onPress={() => navigation.navigate("DrawerNavigator")} title="Open Drawer" />
+            <View style={styles.createBtnWrapper}>
+                <Button title="Create new project" onPress={() => navigation.navigate("NewProject")} />
+            </View>
         </View>
     );
 };
@@ -33,6 +37,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    createBtnWrapper: {
+        marginTop: 20
+    }
 });
 
 export default MainScreen;

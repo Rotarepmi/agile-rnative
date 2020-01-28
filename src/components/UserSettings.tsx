@@ -2,27 +2,39 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, TouchableHighlight } from "react-native";
 import { NavigationSwitchProp } from "react-navigation";
 
-import firebase from "../utils/firebase";
+import firebase, { db } from "../utils/firebase";
 
 interface Props {
     navigation: NavigationSwitchProp;
 }
 
-const SignUp: React.FC<Props> = ({ navigation }) => {
+const UserSettings: React.FC<Props> = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [displayName, setDisplayName] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    function handleSignUp() {
+    function handleUpdate() {
         setLoading(true);
+        const user = firebase.auth().currentUser;
 
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(value => {
-                setLoading(false);
-                navigation.navigate("UserSettings");
+        user.updateProfile({
+            displayName,
+        })
+            .then(() => {
+                db.collection("users")
+                    .doc(user.uid)
+                    .set({
+                        email: user.email,
+                        name: displayName,
+                    })
+                    .then(() => {
+                        setLoading(false);
+                        navigation.navigate("Dashboard");
+                    })
+                    .catch(e => {
+                        setLoading(false);
+                        setErrorMessage(e.message);
+                    });
             })
             .catch(e => {
                 setLoading(false);
@@ -32,27 +44,20 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Sign up</Text>
+            <Text>Update user name</Text>
             {/* <Button title="Sign Up by Google" onPress={handleSignUpByGoogle} /> */}
             {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
             {loading && <ActivityIndicator size="small" />}
-            <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} />
+            {/* <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} /> */}
             <TextInput
-                secureTextEntry
-                placeholder="Password"
+                placeholder="User name"
                 autoCapitalize="none"
                 style={styles.textInput}
-                onChangeText={password => setPassword(password)}
-                value={password}
+                onChangeText={displayName => setDisplayName(displayName)}
+                value={displayName}
             />
             <View style={styles.signupBtnWrapper}>
-                <Button title="Sign Up" onPress={handleSignUp} />
-            </View>
-            <View style={styles.signinWrapper}>
-                <Text>Already have an account?</Text>
-                <TouchableHighlight style={styles.signinBtn} onPress={() => navigation.navigate("SignIn")}>
-                    <Text style={styles.signinBtnTxt}>Sign in</Text>
-                </TouchableHighlight>
+                <Button title="Save" onPress={handleUpdate} />
             </View>
         </View>
     );
@@ -89,4 +94,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignUp;
+export default UserSettings;
