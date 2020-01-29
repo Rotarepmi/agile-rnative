@@ -1,9 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://nd-nt6.j-mandra.agile.exp.direct",
+  "packagerNgrokUrl": "https://packager.nd-nt6.j-mandra.agile.exp.direct",
+  "ngrokPid": 5477,
   "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null
+  "packagerPort": 19001,
+  "packagerPid": 5466
 }
