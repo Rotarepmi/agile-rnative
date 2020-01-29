@@ -4,7 +4,7 @@ import { Text, StyleSheet, TouchableOpacity } from "react-native";
 interface Props {
     data: {
         id: string;
-        title: string;
+        name: string;
     };
     setDetailsVisible: () => void;
 }
@@ -12,7 +12,7 @@ interface Props {
 const KanbanColumnItemView: React.FC<Props> = ({ data, setDetailsVisible }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={setDetailsVisible}>
-            <Text>{data.title}</Text>
+            <Text>{data.name}</Text>
         </TouchableOpacity>
     );
 };

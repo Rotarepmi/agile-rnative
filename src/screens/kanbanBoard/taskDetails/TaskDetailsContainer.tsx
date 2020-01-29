@@ -10,7 +10,7 @@ import { Column } from "../../../utils/Types";
 interface Props {
     data: {
         id: string;
-        title: string;
+        name: string;
     };
     columnId: Column["id"];
     detailsVisible: boolean;

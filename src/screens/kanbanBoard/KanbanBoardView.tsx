@@ -13,7 +13,7 @@ const KanbanBoardView: React.FC<Props> = ({ columns }) => {
         <View style={styles.container}>
             <ScrollView horizontal scrollEnabled pagingEnabled style={{ flex: 1 }} contentContainerStyle={styles.scrollView}>
                 {
-                    columns && columns.map(col => <KanbanColumn data={col} key={col.id} />)
+                    columns && columns.map(col => <KanbanColumn column={col} key={col.id} />)
                 }
             </ScrollView>
         </View>
