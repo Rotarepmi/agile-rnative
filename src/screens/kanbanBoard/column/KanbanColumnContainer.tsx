@@ -90,8 +90,25 @@ const KanbanColumnContainer: React.FC<Props> = ({ column }) => {
 
         Promise.all([addToTasks, addToProject])
             .then(() => {
-                setAddingTask(false);
-                keyboardVisible && Keyboard.dismiss();
+                db.collection("projects")
+                    .doc(activeProject)
+                    .collection("tasksLists")
+                    .orderBy("place")
+                    .get()
+                    .then(querySnap => {
+                        let cols = [];
+
+                        querySnap.forEach(result => {
+                            cols.push({ id: result.id, ...result.data() });
+                        });
+                        return cols;
+                    })
+                    .then(cols => {
+                        dispatch(tasksFetchSuccess(cols));
+                        setAddingTask(false);
+                        keyboardVisible && Keyboard.dismiss();
+                    })
+                    .catch(e => console.log(e));
             })
             .catch(e => console.log(e));
     }
