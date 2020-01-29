@@ -4,6 +4,7 @@ import { StyleSheet, View, StatusBar } from "react-native";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { YellowBox } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
+import { SafeAreaProvider, SafeAreaConsumer } from "react-native-safe-area-context";
 // import { createStackNavigator } from "react-navigation-stack";
 
 import { store } from "./src/redux/store";
@@ -58,13 +59,19 @@ const App: React.FC = () => {
 
     return (
         <Provider store={store}>
-            <View style={styles.container}>
-                <StatusBar backgroundColor="black" barStyle="light-content" />
-                {/* <MenuBar /> */}
-                {/* <SideMenu /> */}
-                <AppContainer />
-                {/* <KanbanBoard /> */}
-            </View>
+            <SafeAreaProvider>
+                <SafeAreaConsumer>
+                    {insets => (
+                        <View style={{ ...styles.container, paddingTop: insets.top }}>
+                            {/* <StatusBar backgroundColor="black" barStyle="light-content" /> */}
+                            {/* <MenuBar /> */}
+                            {/* <SideMenu /> */}
+                            <AppContainer />
+                            {/* <KanbanBoard /> */}
+                        </View>
+                    )}
+                </SafeAreaConsumer>
+            </SafeAreaProvider>
         </Provider>
     );
 };
