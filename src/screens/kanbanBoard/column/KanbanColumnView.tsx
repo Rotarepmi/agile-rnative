@@ -30,7 +30,7 @@ const KanbanColumnView: React.FC<Props> = ({
 }) => {
     return (
         <View style={styles.container}>
-            <ColumnHeader title={data.title} id={data.id} />
+            <ColumnHeader name={data.name} id={data.id} />
 
             <KeyboardAvoidingView style={styles.flatListContainer}>
                 {/* <FlatList

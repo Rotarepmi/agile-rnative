@@ -7,7 +7,6 @@ import KanbanBoardView from "./KanbanBoardView";
 
 const KanbanBoardContainer: React.FC = () => {
     const columns = useSelector(state => state.tasks.columns);
-
     const activeProject = useSelector(state => state.projects.activeProject);
     const dispatch = useDispatch();
 
