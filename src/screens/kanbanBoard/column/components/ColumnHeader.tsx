@@ -2,14 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 interface Props {
-    title: string;
+    name: string;
     id: string;
 }
 
-const ColumnHeader: React.FC<Props> = ({ title, id }) => {
+const ColumnHeader: React.FC<Props> = ({ name, id }) => {
     return (
         <View style={styles.container}>
-            <Text>{title}</Text>
+            <Text>{name}</Text>
         </View>
     );
 };
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 15,
         backgroundColor: "#fff",
+        // color: "#000"
     }
 })
 
