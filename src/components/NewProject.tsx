@@ -10,7 +10,7 @@ interface Props {
 
 const UserSettings: React.FC<Props> = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
-    const [displayName, setDisplayName] = useState("");
+    const [projectName, setProjectName] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     function handleUpdate() {
@@ -18,16 +18,16 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
         const user = firebase.auth().currentUser;
         const newProjectRef = db.collection("projects").doc();
 
-        newProjectRef
+        const createProject = newProjectRef
             .set({
-                name: displayName,
+                name: projectName,
                 users: [
                     {
                         id: user.uid,
                         name: user.displayName,
                     },
                 ],
-                owner: user.uid
+                owner: user.uid,
             })
             .then(value => {
                 console.log("Added to projects");
@@ -35,60 +35,86 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
             .catch(e => {
                 setErrorMessage(e.message);
             });
-        
-        newProjectRef.collection("tasksLists").doc().set({
-            name: "Backlog",
-            place: 0
-        }).then(value => {
-            console.log("Added Backlog");
-        })
-        .catch(e => {
-            setErrorMessage(e.message);
-        });
 
-        newProjectRef.collection("tasksLists").doc().set({
-            name: "In progress",
-            place: 1
-        }).then(value => {
-            console.log("Added In progress");
-        })
-        .catch(e => {
-            setErrorMessage(e.message);
-        });
+        const createBacklog = newProjectRef
+            .collection("tasksLists")
+            .doc()
+            .set({
+                name: "Backlog",
+                place: 0,
+            })
+            .then(value => {
+                console.log("Added Backlog");
+            })
+            .catch(e => {
+                setErrorMessage(e.message);
+            });
 
-        newProjectRef.collection("tasksLists").doc().set({
-            name: "Testing",
-            place: 2
-        }).then(value => {
-            console.log("Added Testing");
-        })
-        .catch(e => {
-            setErrorMessage(e.message);
-        });
+        const createInProgress = newProjectRef
+            .collection("tasksLists")
+            .doc()
+            .set({
+                name: "In progress",
+                place: 1,
+            })
+            .then(value => {
+                console.log("Added In progress");
+            })
+            .catch(e => {
+                setErrorMessage(e.message);
+            });
 
-        newProjectRef.collection("tasksLists").doc().set({
-            name: "Done",
-            place: 3
-        }).then(value => {
-            console.log("Added Done");
-        })
-        .catch(e => {
-            setErrorMessage(e.message);
-        });
+        const createTesting = newProjectRef
+            .collection("tasksLists")
+            .doc()
+            .set({
+                name: "Testing",
+                place: 2,
+            })
+            .then(value => {
+                console.log("Added Testing");
+            })
+            .catch(e => {
+                setErrorMessage(e.message);
+            });
 
-        db.collection("users")
+        const createDone = newProjectRef
+            .collection("tasksLists")
+            .doc()
+            .set({
+                name: "Done",
+                place: 3,
+            })
+            .then(value => {
+                console.log("Added Done");
+            })
+            .catch(e => {
+                setErrorMessage(e.message);
+            });
+
+        const updateUsers = db
+            .collection("users")
             .doc(user.uid)
             .update({
                 projects: [
                     {
                         id: newProjectRef.id,
-                        name: displayName,
+                        name: projectName,
                     },
                 ],
             })
             .then(() => {
                 console.log("Added to users");
+            })
+            .catch(e => {
                 setLoading(false);
+                setErrorMessage(e.message);
+            });
+
+        Promise.all([createProject, createBacklog, createInProgress, createTesting, createDone, updateUsers])
+            .then(() => {
+                setLoading(false);
+                navigation.navigate("KanbanBoard");
             })
             .catch(e => {
                 setLoading(false);
@@ -99,16 +125,14 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text>Create new project</Text>
-            {/* <Button title="Sign Up by Google" onPress={handleSignUpByGoogle} /> */}
             {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
             {loading && <ActivityIndicator size="small" />}
-            {/* <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} /> */}
             <TextInput
-                placeholder="New project name"
+                placeholder="Project name"
                 autoCapitalize="none"
                 style={styles.textInput}
-                onChangeText={displayName => setDisplayName(displayName)}
-                value={displayName}
+                onChangeText={value => setProjectName(value)}
+                value={projectName}
             />
             <View style={styles.signupBtnWrapper}>
                 <Button title="Save" onPress={handleUpdate} />
