@@ -99,14 +99,15 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
         const updateUsers = db
             .collection("users")
             .doc(user.uid)
-            .update({
-                projects: [
-                    {
+            .set(
+                {
+                    projects: firebase.firestore.FieldValue.arrayUnion({
                         id: newProjectRef.id,
                         name: projectName,
-                    },
-                ],
-            })
+                    }),
+                },
+                { merge: true },
+            )
             .then(() => {
                 console.log("Added to users");
             })
