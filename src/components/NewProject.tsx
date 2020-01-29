@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, TouchableHighlight } from "react-native";
 import { NavigationSwitchProp } from "react-navigation";
+import { useDispatch } from "react-redux";
 
 import firebase, { db } from "../utils/firebase";
+import { setActiveProject } from "../redux/actions";
 
 interface Props {
     navigation: NavigationSwitchProp;
 }
 
-const UserSettings: React.FC<Props> = ({ navigation }) => {
+const NewProject: React.FC<Props> = ({ navigation }) => {
+    const dispatch = useDispatch();
+
     const [loading, setLoading] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -114,6 +118,7 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
         Promise.all([createProject, createBacklog, createInProgress, createTesting, createDone, updateUsers])
             .then(() => {
                 setLoading(false);
+                dispatch(setActiveProject(newProjectRef.id));
                 navigation.navigate("KanbanBoard");
             })
             .catch(e => {
@@ -172,4 +177,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default UserSettings;
+export default NewProject;
