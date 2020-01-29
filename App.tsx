@@ -12,7 +12,7 @@ import { store } from "./src/redux/store";
 import MainScreen from "./src/screens/MainScreen";
 import { KanbanBoard } from "./src/screens/kanbanBoard";
 import { Loading, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
-// import SideMenu from "./src/components/SideMenu";
+import SideMenu from "./src/components/SideMenu";
 
 // const Stack = createStackNavigator(
 //     {
@@ -27,7 +27,7 @@ const Dashboard = createDrawerNavigator(
     },
     {
         initialRouteName: "MainScreen",
-        // contentComponent: SideMenu,
+        contentComponent: SideMenu,
         // drawerWidth: Dimensions.get("window").width - 120,
     },
 );
@@ -62,7 +62,7 @@ const App: React.FC = () => {
             <SafeAreaProvider>
                 <SafeAreaConsumer>
                     {insets => (
-                        <View style={{ ...styles.container, paddingTop: insets.top }}>
+                        <View style={{ ...styles.container, paddingTop: insets.top, paddingBottom: insets.bottom }}>
                             {/* <StatusBar backgroundColor="black" barStyle="light-content" /> */}
                             {/* <MenuBar /> */}
                             {/* <SideMenu /> */}

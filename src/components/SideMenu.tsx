@@ -1,12 +1,31 @@
-import React from "react";
-import { NavigationActions } from "react-navigation";
+import React, { useEffect, useState, FunctionComponent } from "react";
+import { NavigationActions, NavigationSwitchProp } from "react-navigation";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
+
+import firebase, { db } from "../utils/firebase";
+import { setActiveProject } from "../redux/actions";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { DrawerContentComponentProps } from "react-navigation-drawer";
 
 interface Props {
-    navigation: any;
+    navigation: NavigationSwitchProp;
 }
 
-const SideMenu: React.FC<Props> = ({ navigation }) => {
+const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }) => {
+    const dispatch = useDispatch();
+    const currentUser = firebase.auth().currentUser;
+
+    const [userProjects, setUserProjects] = useState<{ id: string; name: string }[]>([]);
+
+    useEffect(() => {
+        db.collection("users")
+            .doc(currentUser.uid)
+            .get()
+            .then(qSnap => setUserProjects(qSnap.data().projects))
+            .catch(e => console.log(e));
+    }, []);
+
     function navigateToScreen(route) {
         // const navigateAction = NavigationActions.navigate({
         //     routeName: route,
@@ -14,39 +33,34 @@ const SideMenu: React.FC<Props> = ({ navigation }) => {
         navigation.navigate(route);
     }
 
+    function handleProjectPress(id: any) {
+        dispatch(setActiveProject(id));
+        navigateToScreen("KanbanBoard");
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView>
                 <View>
-                    <Text style={styles.sectionHeadingStyle}>Section 1</Text>
                     <View style={styles.navSectionStyle}>
-                        <Text style={styles.navItemStyle} onPress={() => navigateToScreen("Page1")}>
-                            Page1
-                        </Text>
+                        <TouchableHighlight onPress={() => navigateToScreen("MainScreen")}>
+                            <Text style={styles.navItemStyle}>Home screen</Text>
+                        </TouchableHighlight>
                     </View>
                 </View>
                 <View>
-                    <Text style={styles.sectionHeadingStyle}>Section 2</Text>
+                    <Text style={styles.sectionHeadingStyle}>Projects</Text>
                     <View style={styles.navSectionStyle}>
-                        <Text style={styles.navItemStyle} onPress={() => navigateToScreen("Page2")}>
-                            Page2
-                        </Text>
-                        <Text style={styles.navItemStyle} onPress={() => navigateToScreen("Page3")}>
-                            Page3
-                        </Text>
-                    </View>
-                </View>
-                <View>
-                    <Text style={styles.sectionHeadingStyle}>Section 3</Text>
-                    <View style={styles.navSectionStyle}>
-                        <Text style={styles.navItemStyle} onPress={() => navigateToScreen("Page4")}>
-                            Page4
-                        </Text>
+                        {userProjects.map(pr => (
+                            <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id)}>
+                                <Text style={styles.navItemStyle}>{pr.name}</Text>
+                            </TouchableHighlight>
+                        ))}
                     </View>
                 </View>
             </ScrollView>
             <View style={styles.footerContainer}>
-                <Text>This is my fixed footer</Text>
+                <Text>|| {currentUser.displayName}</Text>
             </View>
         </View>
     );
