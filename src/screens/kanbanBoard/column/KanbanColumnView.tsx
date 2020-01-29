@@ -42,7 +42,7 @@ const KanbanColumnView: React.FC<Props> = ({
                     // }
                 /> */}
                 <ScrollView>
-                    {data.tasks.map(item => (
+                    {data.tasks && data.tasks.map(item => (
                         <KanbanColumnItem key={item.id} data={item} columnId={data.id} />
                     ))}
                     {addingTask && (
