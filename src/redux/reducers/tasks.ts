@@ -1,4 +1,6 @@
-export const tasks = (state = { columns: [] }, action) => {
+const initialState = { columns: [] };
+
+export const tasks = (state = initialState, action) => {
     switch (action.type) {
         case "TASKS_FETCH_SUCCESS":
             return {

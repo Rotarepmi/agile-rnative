@@ -13,3 +13,10 @@ export const updateTasksList = (columns: Column[]) => {
         columns
     }
 };
+
+export const setActiveProject = (projectId: string) => {
+    return {
+        type: "SET_ACTIVE_PROJECT",
+        projectId
+    }
+}
