@@ -7,26 +7,46 @@ import KanbanBoardView from "./KanbanBoardView";
 
 const KanbanBoardContainer: React.FC = () => {
     const columns = useSelector(state => state.tasks.columns);
+
+    const activeProject = useSelector(state => state.projects.activeProject);
     const dispatch = useDispatch();
 
-    const fetchColumns = useCallback(() => {
-        db.collection("columns")
-            .orderBy("place")
-            .get()
-            .then(qSnap => {
-                let cols = [];
+    const fetchProject = useCallback(() => {
+        if (!!activeProject) {
+            db.collection("projects")
+                .doc(activeProject)
+                .collection("tasksLists")
+                .orderBy("place")
+                .get()
+                .then(querySnap => {
+                    let cols = [];
 
-                qSnap.forEach(snap => {
-                    cols.push({ id: snap.id, ...snap.data() });
-                });
-                return cols;
-            })
-            .then(cols => dispatch(tasksFetchSuccess(cols)));
+                    querySnap.forEach(result => {
+                        cols.push({ id: result.id, ...result.data() });
+                    })
+                    return cols;
+                })
+                .then(cols => dispatch(tasksFetchSuccess(cols)))
+                .catch(e => console.log(e));
+        }
+
+        // db.collection("columns")
+        //     .orderBy("place")
+        //     .get()
+        //     .then(qSnap => {
+        //         let cols = [];
+
+        //         qSnap.forEach(snap => {
+        //             cols.push({ id: snap.id, ...snap.data() });
+        //         });
+        //         return cols;
+        //     })
+        //     .then(cols => dispatch(tasksFetchSuccess(cols)));
     }, []);
 
     useEffect(() => {
-        fetchColumns();
-    }, [fetchColumns]);
+        fetchProject();
+    }, [fetchProject]);
 
     return <KanbanBoardView columns={columns} />;
 };
