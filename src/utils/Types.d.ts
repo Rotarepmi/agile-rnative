@@ -1,6 +1,6 @@
 export interface Column {
     id: string;
-    title: string
+    name: string
     tasks: {
         id: string;
         title: string;
