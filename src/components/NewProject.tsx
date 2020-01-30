@@ -120,7 +120,7 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
             .then(() => {
                 setLoading(false);
                 dispatch(setActiveProject(newProjectRef.id));
-                navigation.navigate("KanbanBoard");
+                navigation.navigate("KanbanBoard", { projectId: newProjectRef.id });
             })
             .catch(e => {
                 setLoading(false);
