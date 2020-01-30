@@ -5,7 +5,7 @@ import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { YellowBox } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { SafeAreaProvider, SafeAreaConsumer } from "react-native-safe-area-context";
-// import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator } from "react-navigation-stack";
 
 import { store } from "./src/redux/store";
 
@@ -14,32 +14,38 @@ import { KanbanBoard } from "./src/screens/kanbanBoard";
 import { Loading, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
 import SideMenu from "./src/components/SideMenu";
 
-// const Stack = createStackNavigator(
-//     {
-//         NewProject
-//     }
-// )
-
 const Dashboard = createDrawerNavigator(
     {
         MainScreen,
-        KanbanBoard,
     },
     {
         initialRouteName: "MainScreen",
         contentComponent: SideMenu,
+        defaultNavigationOptions: {
+            title: "Dupa",
+        }
         // drawerWidth: Dimensions.get("window").width - 120,
+    },
+);
+
+const StackNav = createStackNavigator(
+    {
+        Dashboard,
+        KanbanBoard,
+        NewProject,
+    },
+    {
+        initialRouteName: "Dashboard",
     },
 );
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
-            Dashboard,
+            StackNav,
             Loading,
             SignUp,
             SignIn,
-            NewProject,
             UserSettings,
         },
         {
@@ -62,8 +68,8 @@ const App: React.FC = () => {
             <SafeAreaProvider>
                 <SafeAreaConsumer>
                     {insets => (
-                        <View style={{ ...styles.container, paddingTop: insets.top, paddingBottom: insets.bottom }}>
-                            {/* <StatusBar backgroundColor="black" barStyle="light-content" /> */}
+                        <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
+                            <StatusBar backgroundColor="white" barStyle="dark-content" />
                             {/* <MenuBar /> */}
                             {/* <SideMenu /> */}
                             <AppContainer />
