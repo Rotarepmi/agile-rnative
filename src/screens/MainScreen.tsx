@@ -10,15 +10,20 @@ interface Props {
 
 const MainScreen: React.FC<Props> = ({ navigation }) => {
     const [currentUser, setCurrentUser] = useState(null);
+    const [isMounted, setIsMounted] = useState(true);
 
     useEffect(() => {
         const currentUser = firebase.auth().currentUser;
-        setCurrentUser(currentUser);
+        isMounted && setCurrentUser(currentUser);
 
         db.collection("users")
             .doc(currentUser.uid)
             .get()
             .then(qSnap => console.log("QSNAP", qSnap.data()));
+
+        return () => {
+            setIsMounted(false);
+        }
     }, []);
 
     return (
@@ -26,6 +31,7 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
             <Text>Hi {currentUser && currentUser.displayName}!</Text>
             <View style={styles.createBtnWrapper}>
                 <Button title="Create new project" onPress={() => navigation.navigate("NewProject")} />
+                <Button title="Sign out" onPress={() => firebase.auth().signOut()} />
             </View>
         </View>
     );
