@@ -1,28 +1,40 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator } from "react-native";
 import firebase from "../utils/firebase";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { NavigationSwitchProp } from "react-navigation";
 
 interface Props {
-    navigation: any;
+    navigation: NavigationSwitchProp;
 }
 
 const SignIn: React.FC<Props> = ({ navigation }) => {
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     function handleSignIn() {
+        setLoading(true);
+
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then(() => navigation.navigate("Dashboard"))
-            .catch(e => setErrorMessage(e.errorMessage));
+            .then(() => {
+                setLoading(false);
+                navigation.navigate("MainScreen");
+            })
+            .catch(e => {
+                setLoading(false);
+                setErrorMessage(e.message);
+            });
     }
 
     return (
         <View style={styles.container}>
-            <Text>Login</Text>
+            <Text>Sign in</Text>
             {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
+            {loading && <ActivityIndicator size="small" />}
             <TextInput style={styles.textInput} autoCapitalize="none" placeholder="Email" onChangeText={email => setEmail(email)} value={email} />
             <TextInput
                 secureTextEntry
@@ -32,8 +44,15 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
                 onChangeText={password => setPassword(password)}
                 value={password}
             />
-            <Button title="Login" onPress={handleSignIn} />
-            <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate("SignUp")} />
+            <View style={styles.confirmBtnWrapper}>
+                <Button title="Sign in" onPress={handleSignIn} />
+            </View>
+            <View style={styles.signWrapper}>
+                <Text>Don't have an account?</Text>
+                <TouchableHighlight style={styles.signBtn} onPress={() => navigation.navigate("SignUp")}>
+                    <Text style={styles.signBtnTxt}>Sign up</Text>
+                </TouchableHighlight>
+            </View>
         </View>
     );
 };
@@ -50,6 +69,22 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         borderWidth: 1,
         marginTop: 8,
+    },
+    confirmBtnWrapper: {
+        marginTop: 10,
+    },
+    signWrapper: {
+        marginTop: 10,
+        flex: 0,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    signBtn: {
+        marginLeft: 5,
+    },
+    signBtnTxt: {
+        color: "#0990ff",
     },
 });
 
