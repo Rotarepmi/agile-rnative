@@ -66,7 +66,7 @@ const TaskDetailsView: React.FC<Props> = ({
                     {task.modifyDate && <Text>Modified: {formatDistanceToNow(Number(task.modifyDate))} ago</Text>}
                     <Picker selectedValue={columnId} onValueChange={value => handleColumnChange(value)}>
                         {columns.map(c => (
-                            <Picker.Item label={c.title} value={c.id} key={c.id} />
+                            <Picker.Item label={c.name} value={c.id} key={c.id} />
                         ))}
                     </Picker>
                     <TextInput
