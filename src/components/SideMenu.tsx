@@ -12,7 +12,7 @@ interface Props {
     navigation: NavigationSwitchProp;
 }
 
-const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }) => {
+const SideMenu: FunctionComponent<DrawerContentComponentProps>= ({ navigation }) => {
     const dispatch = useDispatch();
     const currentUser = firebase.auth().currentUser;
 
@@ -22,7 +22,10 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
         db.collection("users")
             .doc(currentUser.uid)
             .get()
-            .then(qSnap => setUserProjects(qSnap.data().projects))
+            .then(qSnap => {
+                const projects = qSnap.data().projects;
+                projects && setUserProjects(projects);
+            })
             .catch(e => console.log(e));
     }, []);
 
@@ -35,7 +38,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
 
     function handleProjectPress(id: any) {
         dispatch(setActiveProject(id));
-        navigateToScreen("KanbanBoard");
+        navigation.navigate("KanbanBoard", { projectId: id });
     }
 
     return (
@@ -51,7 +54,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                 <View>
                     <Text style={styles.sectionHeadingStyle}>Projects</Text>
                     <View style={styles.navSectionStyle}>
-                        {userProjects.map(pr => (
+                        {userProjects && userProjects.map(pr => (
                             <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id)}>
                                 <Text style={styles.navItemStyle}>{pr.name}</Text>
                             </TouchableHighlight>
