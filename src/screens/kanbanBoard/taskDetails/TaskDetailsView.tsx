@@ -3,15 +3,16 @@ import { Modal, View, Text, TouchableHighlight, TextInput, StyleSheet, Picker } 
 import { FontAwesome } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Column } from "../../../utils/Types";
+import { firestore } from "firebase";
 
 interface Props {
     task:
         | {
               id: string;
-              title: string;
+              name: string;
               description: string;
-              createDate: string;
-              modifyDate: string;
+              creationDate: firestore.Timestamp;
+              modifyDate: firestore.Timestamp;
           }
         | undefined;
     description: string;
@@ -39,7 +40,9 @@ const TaskDetailsView: React.FC<Props> = ({
     handleSave,
     setDetailsVisible,
 }) => {
+
     if (!task) return null;
+    console.log(task.creationDate)
     return (
         <Modal animationType="slide" transparent={false} visible={detailsVisible}>
             <View>
@@ -62,8 +65,8 @@ const TaskDetailsView: React.FC<Props> = ({
                         onChangeText={(value: string) => setTitle(value)}
                         onEndEditing={handleSave}
                     />
-                    <Text>Created: {formatDistanceToNow(Number(task.createDate))} ago</Text>
-                    {task.modifyDate && <Text>Modified: {formatDistanceToNow(Number(task.modifyDate))} ago</Text>}
+                    <Text>Created: {formatDistanceToNow(task.creationDate.toDate())} ago</Text>
+                    {task.modifyDate && <Text>Modified: {formatDistanceToNow(task.modifyDate.toDate())} ago</Text>}
                     <Picker selectedValue={columnId} onValueChange={value => handleColumnChange(value)}>
                         {columns.map(c => (
                             <Picker.Item label={c.name} value={c.id} key={c.id} />

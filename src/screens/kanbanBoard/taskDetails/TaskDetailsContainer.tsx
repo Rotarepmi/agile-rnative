@@ -18,6 +18,7 @@ interface Props {
 }
 
 const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId, setDetailsVisible }) => {
+    const activeProject = useSelector(state => state.projects.activeProject);
     const columns = useSelector(state => state.tasks.columns);
 
     const [task, setTask] = useState();
@@ -25,7 +26,9 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
     const [title, setTitle] = useState("");
 
     const getTask = useCallback((id: string) => {
-        db.collection("tasks")
+        db.collection("projects")
+            .doc(activeProject)
+            .collection("tasks")
             .doc(id)
             .get()
             .then(qSnap => {
@@ -33,7 +36,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
 
                 setTask(data);
                 setDescription(data.description);
-                setTitle(data.title);
+                setTitle(data.name);
             })
             .catch(e => ToastAndroid.show("Error fetching task", ToastAndroid.SHORT));
     }, []);
@@ -48,7 +51,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
         db.collection("tasks")
             .doc(data.id)
             .update({
-                title,
+                name: title,
                 description,
                 modifyDate: Date.now(),
             })
