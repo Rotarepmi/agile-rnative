@@ -12,7 +12,7 @@ interface Props {
     navigation: NavigationSwitchProp;
 }
 
-const SideMenu: FunctionComponent<DrawerContentComponentProps>= ({ navigation }) => {
+const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }) => {
     const dispatch = useDispatch();
     const currentUser = firebase.auth().currentUser;
 
@@ -46,7 +46,12 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps>= ({ navigation })
             <ScrollView>
                 <View>
                     <View style={styles.navSectionStyle}>
-                        <TouchableHighlight onPress={() => navigateToScreen("MainScreen")}>
+                        <TouchableHighlight
+                            onPress={() => {
+                                navigateToScreen("MainScreen");
+                                navigation.closeDrawer();
+                            }}
+                        >
                             <Text style={styles.navItemStyle}>Home screen</Text>
                         </TouchableHighlight>
                     </View>
@@ -54,11 +59,12 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps>= ({ navigation })
                 <View>
                     <Text style={styles.sectionHeadingStyle}>Projects</Text>
                     <View style={styles.navSectionStyle}>
-                        {userProjects && userProjects.map(pr => (
-                            <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id)}>
-                                <Text style={styles.navItemStyle}>{pr.name}</Text>
-                            </TouchableHighlight>
-                        ))}
+                        {userProjects &&
+                            userProjects.map(pr => (
+                                <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id)}>
+                                    <Text style={styles.navItemStyle}>{pr.name}</Text>
+                                </TouchableHighlight>
+                            ))}
                     </View>
                 </View>
             </ScrollView>
