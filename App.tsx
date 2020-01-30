@@ -16,26 +16,32 @@ import SideMenu from "./src/components/SideMenu";
 
 const Dashboard = createDrawerNavigator(
     {
-        MainScreen,
+        SideMenu,
+        MainScreen
     },
     {
-        initialRouteName: "MainScreen",
+        initialRouteName: "SideMenu",
         contentComponent: SideMenu,
-        defaultNavigationOptions: {
-            title: "Dupa",
-        }
-        // drawerWidth: Dimensions.get("window").width - 120,
+        // defaultNavigationOptions: {
+        //     title: "Dupa",
+        // }
     },
 );
 
 const StackNav = createStackNavigator(
     {
         Dashboard,
+        MainScreen,
         KanbanBoard,
         NewProject,
     },
     {
         initialRouteName: "Dashboard",
+        defaultNavigationOptions: {
+            title: "Agiler",
+            headerBackTitleVisible: false,
+            // headerBackImage: () =>  <FontAwesome name="bars" />
+        }
     },
 );
 

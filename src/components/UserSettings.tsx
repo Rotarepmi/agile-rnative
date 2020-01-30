@@ -29,7 +29,7 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
                     })
                     .then(() => {
                         setLoading(false);
-                        navigation.navigate("Dashboard");
+                        navigation.navigate("MainScreen");
                     })
                     .catch(e => {
                         setLoading(false);
