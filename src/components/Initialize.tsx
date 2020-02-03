@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import firebase from "../utils/firebase";
+import firebase, { db } from "../utils/firebase";
 interface Props {
     navigation: any;
 }
 
-const Loading: React.FC<Props> = ({ navigation }) => {
+const Initialize: React.FC<Props> = ({ navigation }) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             const route = user ? (user.displayName ? "Welcome" : "UserSettings") : "SignIn";
             navigation.navigate(route);
         });
     }, []);
-
+    
     return (
         <View style={styles.container}>
             <Text>Loading </Text>
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Loading;
+export default Initialize;
