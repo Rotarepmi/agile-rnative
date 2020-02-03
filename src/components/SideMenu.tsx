@@ -21,12 +21,13 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
     useEffect(() => {
         db.collection("users")
             .doc(currentUser.uid)
-            .get()
-            .then(qSnap => {
-                const projects = qSnap.data().projects;
-                projects && setUserProjects(projects);
-            })
-            .catch(e => console.log(e));
+            .onSnapshot(
+                qSnap => {
+                    const projects = qSnap.data().projects;
+                    projects && setUserProjects(projects);
+                }
+            )
+            // .catch(e => console.log(e));
     }, []);
 
     function navigateToScreen(route) {
@@ -39,6 +40,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
     function handleProjectPress(id: any, name: any) {
         dispatch(setActiveProject(id));
         navigation.navigate("KanbanBoard", { projectId: id, routeName: name });
+        navigation.closeDrawer();
     }
 
     return (
