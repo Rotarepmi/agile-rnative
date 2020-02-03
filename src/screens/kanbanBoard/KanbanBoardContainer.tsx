@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { db } from "../../utils/firebase";
@@ -10,16 +10,17 @@ interface Props {
     navigation: NavigationSwitchProp;
 }
 
-const KanbanBoardContainer: React.FC<Props> = ({ navigation }) => {
-    const { projectId } = navigation.state.params;
+const KanbanBoardContainer: React.FC = () => {
     const columns = useSelector(state => state.tasks.columns);
     const activeProject = useSelector(state => state.projects.activeProject);
     const dispatch = useDispatch();
 
-    
-    const fetchProject = useCallback(() => {
-        if (!!activeProject || projectId) {
-            console.log("PROJECTID", projectId);
+    const [loading, setLoading] = useState(true);
+
+    const fetchProject = useCallback(projectId => {
+        setLoading(true);
+
+        if (!!projectId) {
             db.collection("projects")
                 .doc(projectId)
                 .collection("tasksLists")
@@ -31,35 +32,21 @@ const KanbanBoardContainer: React.FC<Props> = ({ navigation }) => {
                     querySnap.forEach(result => {
                         cols.push({ id: result.id, ...result.data() });
                     });
-                    console.log("COLSSSSSS", cols);
                     return cols;
                 })
                 .then(cols => {
-                    console.log("DISPACTH", cols);
                     dispatch(tasksFetchSuccess(cols));
+                    setLoading(false);
                 })
                 .catch(e => console.log(e));
         }
-
-        // db.collection("columns")
-        //     .orderBy("place")
-        //     .get()
-        //     .then(qSnap => {
-        //         let cols = [];
-
-        //         qSnap.forEach(snap => {
-        //             cols.push({ id: snap.id, ...snap.data() });
-        //         });
-        //         return cols;
-        //     })
-        //     .then(cols => dispatch(tasksFetchSuccess(cols)));
     }, []);
 
     useEffect(() => {
-        fetchProject();
-    }, [projectId]);
+        fetchProject(activeProject);
+    }, [activeProject]);
 
-    return <KanbanBoardView columns={columns} />;
+    return <KanbanBoardView columns={columns} loading={loading} />;
 };
 
 // KanbanBoardContainer.navigationOptions = ({ navigation }) => ({
