@@ -42,7 +42,7 @@ const TaskDetailsView: React.FC<Props> = ({
 }) => {
 
     if (!task) return null;
-    console.log(task.creationDate)
+    
     return (
         <Modal animationType="slide" transparent={false} visible={detailsVisible}>
             <View>
