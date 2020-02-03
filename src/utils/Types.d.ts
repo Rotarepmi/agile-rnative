@@ -3,7 +3,7 @@ export interface Column {
     name: string
     tasks: {
         id: string;
-        title: string;
+        name: string;
         temporary?: boolean;
     }[]
 }
