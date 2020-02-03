@@ -12,7 +12,7 @@ import { store } from "./src/redux/store";
 
 import MainScreen from "./src/screens/MainScreen";
 import { KanbanBoard } from "./src/screens/kanbanBoard";
-import { Loading, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
+import { Initialize, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
 import SideMenu from "./src/components/SideMenu";
 
 const MainScreenStackNavigator = createStackNavigator({
@@ -28,12 +28,10 @@ const MainScreenStackNavigator = createStackNavigator({
     },
     NewProject: {
         screen: NewProject,
-        navigationOptions: ({ navigation }) => {
-            return {
-                title: "New Project",
-                headerBackTitleVisible: false,
-                gestureEnabled: false,
-            };
+        navigationOptions: {
+            title: "New Project",
+            headerBackTitleVisible: false,
+            gestureEnabled: false,
         },
     },
 });
@@ -43,7 +41,7 @@ const KanbanStackNavigator = createStackNavigator({
         screen: KanbanBoard,
         navigationOptions: ({ navigation }) => {
             const { routeName } = navigation.state.params || navigation.state;
-
+            
             return {
                 title: routeName,
                 headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
@@ -64,7 +62,7 @@ const DashboardStackNavigator = createStackNavigator(
     },
     {
         defaultNavigationOptions: {
-            header: null,
+            headerShown: false,
         },
     },
 );
@@ -86,13 +84,13 @@ const AppContainer = createAppContainer(
             Dashboard: {
                 screen: AppDrawer,
             },
-            Loading,
+            Initialize,
             SignUp,
             SignIn,
             UserSettings,
         },
         {
-            initialRouteName: "Loading",
+            initialRouteName: "Initialize",
         },
     ),
 );
