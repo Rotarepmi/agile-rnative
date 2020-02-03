@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { NavigationSwitchProp } from "react-navigation";
+import { useSelector } from "react-redux";
 
 import firebase, { db } from "../utils/firebase";
 
@@ -9,6 +10,8 @@ interface Props {
 }
 
 const MainScreen: React.FC<Props> = ({ navigation }) => {
+    const activeProject = useSelector(state => state.projects.activeProject);
+
     const [currentUser, setCurrentUser] = useState(null);
     const [isMounted, setIsMounted] = useState(true);
 
@@ -18,8 +21,7 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
         db.collection("users")
             .doc(currentUser.uid)
-            .get()
-            .then(qSnap => console.log("QSNAP", qSnap.data()));
+            .onSnapshot(qSnap => console.log("QSNAP", qSnap.data()))
 
         return () => {
             setIsMounted(false);
