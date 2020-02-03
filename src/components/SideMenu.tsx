@@ -36,9 +36,9 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
         navigation.navigate(route);
     }
 
-    function handleProjectPress(id: any) {
+    function handleProjectPress(id: any, name: any) {
         dispatch(setActiveProject(id));
-        navigation.navigate("KanbanBoard", { projectId: id });
+        navigation.navigate("KanbanBoard", { projectId: id, routeName: name });
     }
 
     return (
@@ -48,7 +48,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                     <View style={styles.navSectionStyle}>
                         <TouchableHighlight
                             onPress={() => {
-                                navigateToScreen("MainScreen");
+                                navigateToScreen("Welcome");
                                 navigation.closeDrawer();
                             }}
                         >
@@ -61,7 +61,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                     <View style={styles.navSectionStyle}>
                         {userProjects &&
                             userProjects.map(pr => (
-                                <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id)}>
+                                <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id, pr.name)}>
                                     <Text style={styles.navItemStyle}>{pr.name}</Text>
                                 </TouchableHighlight>
                             ))}

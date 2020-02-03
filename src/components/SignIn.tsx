@@ -22,7 +22,7 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
             .signInWithEmailAndPassword(email, password)
             .then(() => {
                 setLoading(false);
-                navigation.navigate("MainScreen");
+                navigation.navigate("Welcome");
             })
             .catch(e => {
                 setLoading(false);
