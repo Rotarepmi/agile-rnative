@@ -6,6 +6,7 @@ import { YellowBox } from "react-native";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { SafeAreaProvider, SafeAreaConsumer } from "react-native-safe-area-context";
 import { createStackNavigator } from "react-navigation-stack";
+import Icon from "@expo/vector-icons/Ionicons";
 
 import { store } from "./src/redux/store";
 
@@ -14,41 +15,77 @@ import { KanbanBoard } from "./src/screens/kanbanBoard";
 import { Loading, SignIn, SignUp, UserSettings, NewProject } from "./src/components";
 import SideMenu from "./src/components/SideMenu";
 
-const Dashboard = createDrawerNavigator(
+const MainScreenStackNavigator = createStackNavigator({
+    MainScreen: {
+        screen: MainScreen,
+        navigationOptions: ({ navigation }) => {
+            return {
+                title: "Agiler",
+                headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
+                gestureEnabled: false,
+            };
+        },
+    },
+    NewProject: {
+        screen: NewProject,
+        navigationOptions: ({ navigation }) => {
+            return {
+                title: "New Project",
+                headerBackTitleVisible: false,
+                gestureEnabled: false,
+            };
+        },
+    },
+});
+
+const KanbanStackNavigator = createStackNavigator({
+    KanbanBoard: {
+        screen: KanbanBoard,
+        navigationOptions: ({ navigation }) => {
+            const { routeName } = navigation.state.params || navigation.state;
+
+            return {
+                title: routeName,
+                headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
+                gestureEnabled: false,
+            };
+        },
+    },
+});
+
+const DashboardStackNavigator = createStackNavigator(
     {
-        SideMenu,
-        MainScreen
+        Welcome: {
+            screen: MainScreenStackNavigator,
+        },
+        KanbanBoard: {
+            screen: KanbanStackNavigator,
+        },
     },
     {
-        initialRouteName: "SideMenu",
-        contentComponent: SideMenu,
-        // defaultNavigationOptions: {
-        //     title: "Dupa",
-        // }
+        defaultNavigationOptions: {
+            header: null,
+        },
     },
 );
 
-const StackNav = createStackNavigator(
+const AppDrawer = createDrawerNavigator(
     {
-        Dashboard,
-        MainScreen,
-        KanbanBoard,
-        NewProject,
+        Dashboard: {
+            screen: DashboardStackNavigator,
+        },
     },
     {
-        initialRouteName: "Dashboard",
-        defaultNavigationOptions: {
-            title: "Agiler",
-            headerBackTitleVisible: false,
-            // headerBackImage: () =>  <FontAwesome name="bars" />
-        }
+        contentComponent: SideMenu,
     },
 );
 
 const AppContainer = createAppContainer(
     createSwitchNavigator(
         {
-            StackNav,
+            Dashboard: {
+                screen: AppDrawer,
+            },
             Loading,
             SignUp,
             SignIn,
