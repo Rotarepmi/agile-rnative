@@ -21,19 +21,23 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
         db.collection("users")
             .doc(currentUser.uid)
-            .onSnapshot(qSnap => console.log("QSNAP", qSnap.data()))
+            .onSnapshot(qSnap => console.log("QSNAP", qSnap.data()));
 
         return () => {
             setIsMounted(false);
-        }
+        };
     }, []);
 
     return (
         <View style={styles.container}>
             <Text>Hi {currentUser && currentUser.displayName}!</Text>
             <View style={styles.createBtnWrapper}>
-                <Button title="Create new project" onPress={() => navigation.navigate("NewProject")} />
-                <Button title="Sign out" onPress={() => firebase.auth().signOut()} />
+                <View style={styles.btn}>
+                    <Button title="Create new project" onPress={() => navigation.navigate("NewProject")} />
+                </View>
+                <View style={styles.btn}>
+                    <Button title="Sign out" onPress={() => firebase.auth().signOut()} />
+                </View>
             </View>
         </View>
     );
@@ -46,8 +50,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     createBtnWrapper: {
-        marginTop: 20
-    }
+        marginTop: 20,
+    },
+    btn: {
+        marginTop: 10,
+    },
 });
 
 export default MainScreen;
