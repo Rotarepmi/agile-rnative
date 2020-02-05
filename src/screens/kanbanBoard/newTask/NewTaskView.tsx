@@ -10,7 +10,14 @@ interface Props {
 const NewTaskView: React.FC<Props> = ({ newTaskTitle, handleNewTaskTitleChange, handleSaveClick }) => {
     return (
         <View style={styles.container}>
-            <TextInput style={styles.input} onChangeText={text => handleNewTaskTitleChange(text)} value={newTaskTitle} autoFocus />
+            <TextInput
+                style={styles.input}
+                onChangeText={text => handleNewTaskTitleChange(text)}
+                onSubmitEditing={handleSaveClick}
+                returnKeyType="default"
+                value={newTaskTitle}
+                autoFocus
+            />
             <TouchableOpacity style={styles.button} onPress={handleSaveClick}>
                 <Text style={styles.buttonTxt}>Save</Text>
             </TouchableOpacity>
