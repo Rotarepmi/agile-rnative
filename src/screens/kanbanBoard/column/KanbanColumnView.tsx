@@ -3,58 +3,51 @@ import { StyleSheet, Dimensions, View, Text, FlatList, KeyboardAvoidingView, Scr
 
 import { Column } from "../../../utils/Types";
 import { KanbanColumnItem } from "../columnItem";
-import { KanbanNewColumnItem } from "../newColumnItem";
+import { NewTask } from "../newTask";
 import { AddNewTask, ColumnHeader } from "./components";
 
 const SCREEN_DIMENSIONS = Dimensions.get("screen");
 
 interface Props {
-    data: Column;
+    column: Column;
     addingTask: boolean;
-    newTaskTitle: string;
+    setAddingTask: React.Dispatch<React.SetStateAction<boolean>>;
     keyboardVisible: boolean;
-    handleNewTaskTitleChange: (value: string) => void;
-    handleAddTaskClick: () => void;
-    handleSaveClick: () => void;
 }
 
 const KanbanColumnView: React.FC<Props> = ({
-    data,
+    column,
     addingTask,
-    newTaskTitle,
+    setAddingTask,
     keyboardVisible,
-    handleNewTaskTitleChange,
-    handleAddTaskClick,
-    handleSaveClick,
-    children,
 }) => {
     return (
         <View style={styles.container}>
-            <ColumnHeader name={data.name} id={data.id} />
+            <ColumnHeader name={column.name} id={column.id} />
 
             <KeyboardAvoidingView style={styles.flatListContainer}>
                 {/* <FlatList
                     // contentContainerStyle={styles.flatList}
-                    data={data.tasks}
-                    renderItem={({ item }) => <KanbanColumnItem key={item.id} data={item} />}
+                    column={column.tasks}
+                    renderItem={({ item }) => <KanbanColumnItem key={item.id} column={item} />}
                     // ListFooterComponent={() =>
                     //     addingTask ? <KanbanNewColumnItem newTaskTitle={newTaskTitle} handleNewTaskTitleChange={handleNewTaskTitleChange} /> : null
                     // }
                 /> */}
                 <ScrollView>
-                    {data.tasks && data.tasks.map(item => (
-                        <KanbanColumnItem key={item.id} data={item} columnId={data.id} />
+                    {column.tasks && column.tasks.map(item => (
+                        <KanbanColumnItem key={item.id} column={item} columnId={column.id} />
                     ))}
                     {addingTask && (
-                        <KanbanNewColumnItem
-                            newTaskTitle={newTaskTitle}
-                            handleNewTaskTitleChange={handleNewTaskTitleChange}
-                            handleSaveClick={handleSaveClick}
+                        <NewTask
+                            column={column}
+                            setAddingTask={setAddingTask}
+                            keyboardVisible={keyboardVisible}
                         />
                     )}
                 </ScrollView>
             </KeyboardAvoidingView>
-            {!keyboardVisible && <AddNewTask handleAddTaskClick={handleAddTaskClick} />}
+            {!keyboardVisible && <AddNewTask handleAddTaskClick={setAddingTask} />}
             {/* <AddNewTask handleAddTaskClick={handleAddTaskClick} /> */}
         </View>
     );

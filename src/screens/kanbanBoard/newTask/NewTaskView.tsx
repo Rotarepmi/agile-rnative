@@ -7,7 +7,7 @@ interface Props {
     handleSaveClick: () => void;
 }
 
-const KanbanNewColumnItemView: React.FC<Props> = ({ newTaskTitle, handleNewTaskTitleChange, handleSaveClick }) => {
+const NewTaskView: React.FC<Props> = ({ newTaskTitle, handleNewTaskTitleChange, handleSaveClick }) => {
     return (
         <View style={styles.container}>
             <TextInput style={styles.input} onChangeText={text => handleNewTaskTitleChange(text)} value={newTaskTitle} autoFocus />
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default KanbanNewColumnItemView;
+export default NewTaskView;

@@ -2,13 +2,13 @@ import React from "react";
 import { TouchableHighlight, StyleSheet, Text, View } from "react-native";
 
 interface Props {
-    handleAddTaskClick: () => void;
+    handleAddTaskClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddNewTask: React.FC<Props> = ({ handleAddTaskClick }) => {
     return (
         <View style={styles.container}>
-            <TouchableHighlight onPress={handleAddTaskClick} style={styles.addButton}>
+            <TouchableHighlight onPress={() => handleAddTaskClick(true)} style={styles.addButton}>
                 <Text>+</Text>
             </TouchableHighlight>
         </View>
