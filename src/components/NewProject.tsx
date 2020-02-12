@@ -31,6 +31,7 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
         const createProject = newProjectRef
             .set({
                 name: projectName,
+                description: projectDesc,
                 users: [
                     {
                         id: user.uid,
@@ -38,9 +39,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
                     },
                 ],
                 owner: user.uid,
-            })
-            .then(value => {
-                console.log("Added to projects");
             })
             .catch(e => {
                 setErrorMessage(e.message);
@@ -53,9 +51,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
                 name: "Backlog",
                 place: 0,
             })
-            .then(value => {
-                console.log("Added Backlog");
-            })
             .catch(e => {
                 setErrorMessage(e.message);
             });
@@ -66,9 +61,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
             .set({
                 name: "In progress",
                 place: 1,
-            })
-            .then(value => {
-                console.log("Added In progress");
             })
             .catch(e => {
                 setErrorMessage(e.message);
@@ -81,9 +73,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
                 name: "Testing",
                 place: 2,
             })
-            .then(value => {
-                console.log("Added Testing");
-            })
             .catch(e => {
                 setErrorMessage(e.message);
             });
@@ -94,9 +83,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
             .set({
                 name: "Done",
                 place: 3,
-            })
-            .then(value => {
-                console.log("Added Done");
             })
             .catch(e => {
                 setErrorMessage(e.message);
@@ -114,9 +100,6 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
                 },
                 { merge: true },
             )
-            .then(() => {
-                console.log("Added to users");
-            })
             .catch(e => {
                 setLoading(false);
                 setErrorMessage(e.message);
