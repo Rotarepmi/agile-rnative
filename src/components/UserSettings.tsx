@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image } from "react-native";
 import { NavigationSwitchProp } from "react-navigation";
 
 import firebase, { db } from "../utils/firebase";
@@ -44,20 +44,23 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Update user name</Text>
-            {/* <Button title="Sign Up by Google" onPress={handleSignUpByGoogle} /> */}
-            {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            {loading && <ActivityIndicator size="small" />}
-            {/* <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} /> */}
-            <TextInput
-                placeholder="User name"
-                autoCapitalize="none"
-                style={styles.textInput}
-                onChangeText={displayName => setDisplayName(displayName)}
-                value={displayName}
-            />
+            <View style={styles.form}>
+                <Text>Update user setting</Text>
+                {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
+                {loading && <ActivityIndicator size="small" />}
+                <Image source={require("../assets/user.png")} style={styles.image} />
+                <TextInput
+                    placeholder="User name"
+                    autoCapitalize="none"
+                    autoFocus
+                    style={styles.textInput}
+                    onChangeText={displayName => setDisplayName(displayName)}
+                    value={displayName}
+                />
+            </View>
+
             <View style={styles.signupBtnWrapper}>
-                <Button title="Save" onPress={handleUpdate} />
+                <Button title="Continue" onPress={handleUpdate} />
             </View>
         </View>
     );
@@ -66,31 +69,37 @@ const UserSettings: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    form: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        width: "80%"
     },
     textInput: {
         height: 40,
-        width: "90%",
+        width: "100%",
         borderColor: "gray",
         borderWidth: 1,
-        marginTop: 8,
+        marginTop: 20,
+        padding: 5,
+        borderRadius: 5,
+    },
+    image: {
+        height: 200,
+        width: "100%",
+        // borderColor: "gray",
+        // borderWidth: 1,
+        marginTop: 10,
+        // borderRadius: 5,
+        resizeMode: "contain"
     },
     signupBtnWrapper: {
         marginTop: 10,
-    },
-    signinWrapper: {
-        marginTop: 10,
-        flex: 0,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    signinBtn: {
-        marginLeft: 5,
-    },
-    signinBtnTxt: {
-        color: "#0990ff",
+        marginBottom: 20,
+        flex: 0
     },
 });
 
