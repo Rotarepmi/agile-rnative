@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://2h-dxh.j-mandra.agile.exp.direct",
   "packagerNgrokUrl": "https://packager.2h-dxh.j-mandra.agile.exp.direct",
-  "ngrokPid": 2293,
+  "ngrokPid": 5264,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 2266
+  "packagerPid": 5236
 }

@@ -40,6 +40,23 @@ const KanbanBoardContainer: React.FC = () => {
                 })
                 .catch(e => console.log(e));
         }
+
+        // if (!!projectId) {
+        //     db.collection("projects")
+        //         .doc(projectId)
+        //         .collection("tasksLists")
+        //         .orderBy("place")
+        //         .onSnapshot(querySnapshot => {
+        //             let cols = [];
+
+        //             querySnapshot.forEach(result => {
+        //                 cols.push({ id: result.id, ...result.data() });
+        //             });
+
+        //             dispatch(tasksFetchSuccess(cols));
+        //             setLoading(false);
+        //         });
+        // }
     }, []);
 
     useEffect(() => {
