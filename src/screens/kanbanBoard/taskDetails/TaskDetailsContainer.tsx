@@ -34,6 +34,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
     const [task, setTask] = useState();
     const [description, setDescription] = useState("");
     const [title, setTitle] = useState("");
+    const [newColumnId, setNewColumnId] = useState<Column["id"]>(columnId);
 
     const getTask = useCallback(() => {
         taskRef.current
@@ -48,11 +49,33 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
             .catch(e => ToastAndroid.show(e.message, ToastAndroid.SHORT));
     }, []);
 
+    const changeColumn = useCallback(() => {}, []);
+
     useEffect(() => {
         if (detailsVisible) {
             getTask();
         }
     }, [detailsVisible, getTask]);
+
+    function updateTasks() {
+        db.collection("projects")
+            .doc(activeProject)
+            .collection("tasksLists")
+            .orderBy("place")
+            .get()
+            .then(querySnap => {
+                let cols = [];
+
+                querySnap.forEach(result => {
+                    cols.push({ id: result.id, ...result.data() });
+                });
+                return cols;
+            })
+            .then(cols => {
+                dispatch(tasksFetchSuccess(cols));
+            })
+            .catch(e => console.log(e));
+    }
 
     function handleSave() {
         const updateInTasks = taskRef.current
@@ -64,95 +87,117 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
                 },
                 { merge: true },
             )
-            .then(() => console.log("Added task to tasks"))
+            .then(() => console.log("Updated task in tasks"))
             .catch(e => console.log(e));
 
-        const updateInTasksLists = db
-            .collection("projects")
-            .doc(activeProject)
-            .collection("tasksLists")
-            .doc(columnId)
-            .set(
-                {
-                    tasks: firebase.firestore.FieldValue.arrayUnion({
+        const updateInTasksLists = db.runTransaction(transaction => {
+            const colRef = db
+                .collection("projects")
+                .doc(activeProject)
+                .collection("tasksLists")
+                .doc(columnId);
+
+            return transaction
+                .get(colRef)
+                .then(colDoc => {
+                    if (!colDoc.exists) {
+                        ToastAndroid.show("Column does not exist..", ToastAndroid.SHORT);
+                    }
+
+                    const tasks = colDoc.data().tasks;
+
+                    const index = tasks.findIndex(t => t.id === data.id);
+
+                    tasks.splice(index, 1, {
                         id: data.id,
                         name: title,
-                    }),
-                },
-                { merge: true },
-            )
-            .then(() => {
-                console.log("Added task to project");
-            })
-            .catch(e => {
-                console.log(e);
-            });
+                    });
+
+                    transaction.update(colRef, { tasks });
+                })
+                .catch(e => console.log(e));
+        });
+
+        // const updateInTasksLists = db
+        //     .collection("projects")
+        //     .doc(activeProject)
+        //     .collection("tasksLists")
+        //     .doc(columnId)
+        //     .set(
+        //         {
+        //             tasks: firebase.firestore.FieldValue.arrayUnion({
+        //                 id: data.id,
+        //                 name: title,
+        //             }),
+        //         },
+        //         { merge: true },
+        //     )
+        //     .then(() => {
+        //         console.log("Added task to project");
+        //     })
+        //     .catch(e => {
+        //         console.log(e);
+        //     });
 
         Promise.all([updateInTasks, updateInTasksLists])
-            .then(() => {
-                db.collection("projects")
-                    .doc(activeProject)
-                    .collection("tasksLists")
-                    .orderBy("place")
-                    .get()
-                    .then(querySnap => {
-                        let cols = [];
-
-                        querySnap.forEach(result => {
-                            cols.push({ id: result.id, ...result.data() });
-                        });
-                        return cols;
-                    })
-                    .then(cols => {
-                        dispatch(tasksFetchSuccess(cols));
-                    })
-                    .catch(e => console.log(e));
-            })
+            .then(() => updateTasks())
             .catch(e => console.log(e));
     }
 
-    // db.runTransaction(function(transaction) {
-    //     return transaction.get(sfDocRef).then(function(sfDoc) {
-    //         if (!sfDoc.exists) {
-    //             throw "Document does not exist!";
-    //         }
+    function handleColumnChange(colId: Column["id"]) {
+        setNewColumnId(colId);
 
-    //         var newPopulation = sfDoc.data().population + 1;
-    //         if (newPopulation <= 1000000) {
-    //             transaction.update(sfDocRef, { population: newPopulation });
-    //             return newPopulation;
-    //         } else {
-    //             return Promise.reject("Sorry! Population is too big.");
-    //         }
-    //     });
-    // })
+        const oldColDocRef = db
+            .collection("projects")
+            .doc(activeProject)
+            .collection("tasksLists")
+            .doc(columnId);
+        const newColDocRef = db
+            .collection("projects")
+            .doc(activeProject)
+            .collection("tasksLists")
+            .doc(colId);
 
-    function handleColumnChange(newColumnId: Column["id"]) {
-        const oldColDocRef = db.collection("projects").doc(activeProject).collection("tasksLists").doc(columnId);
-        const newColDocRef =  db.collection("projects").doc(activeProject).collection("tasksLists").doc(newColumnId);
+        const remove = db.runTransaction(transaction =>
+            transaction
+                .get(oldColDocRef)
+                .then(sfDoc => {
+                    if (!sfDoc.exists) {
+                        ToastAndroid.show("Column does not exist..", ToastAndroid.SHORT);
+                    }
 
-        db.runTransaction(transaction =>
-            transaction.get(newColDocRef).then(sfDoc => {
-                if (!sfDoc.exists) {
-                    ToastAndroid.show("Column does not exist..", ToastAndroid.SHORT);
-                }
-
-                const newTasks = sfDoc.data().tasks;
-                newTasks.unshift(data);
-                transaction.update(newColDocRef, { tasks: newTasks });
-            }),
+                    const newTasks = sfDoc.data().tasks.filter(t => t.id !== data.id);
+                    transaction.update(oldColDocRef, { tasks: newTasks });
+                })
+                .catch(e => console.log(e)),
         );
 
-        db.runTransaction(transaction =>
-            transaction.get(oldColDocRef).then(sfDoc => {
-                if (!sfDoc.exists) {
-                    ToastAndroid.show("Column does not exist..", ToastAndroid.SHORT);
-                }
+        const write = db.runTransaction(transaction =>
+            transaction
+                .get(newColDocRef)
+                .then(newColDoc => {
+                    if (!newColDoc.exists) {
+                        ToastAndroid.show("Column does not exist..", ToastAndroid.SHORT);
+                    }
 
-                const newTasks = sfDoc.data().tasks.filter(t => t.id !== data.id);
-                transaction.update(oldColDocRef, { tasks: newTasks });
-            }),
+                    const newColDocDataRef = newColDoc.data();
+                    let newTasks = newColDocDataRef.tasks;
+                    if (newColDocDataRef.tasks) {
+                        newTasks.unshift(data);
+                    } else {
+                        newTasks = [data];
+                    }
+
+                    console.log("NEW", newTasks);
+
+                    transaction.update(newColDocRef, { tasks: newTasks });
+                })
+                .catch(e => console.log(e)),
         );
+
+        Promise.all([remove, write])
+            .then(() => updateTasks())
+            .catch(e => console.log(e));
     }
 
     return (
@@ -163,6 +208,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
             title={title}
             columns={columns}
             columnId={columnId}
+            newColumnId={newColumnId}
             handleColumnChange={handleColumnChange}
             setTitle={setTitle}
             detailsVisible={detailsVisible}

@@ -20,6 +20,7 @@ interface Props {
     detailsVisible: boolean;
     columns: Column[];
     columnId: Column["id"];
+    newColumnId: Column["id"];
     handleColumnChange: (value: Column["id"]) => void;
     setDescription: (value: string) => void;
     setTitle: (value: string) => void;
@@ -34,6 +35,7 @@ const TaskDetailsView: React.FC<Props> = ({
     description,
     columns,
     columnId,
+    newColumnId,
     handleColumnChange,
     setDescription,
     setTitle,
@@ -67,7 +69,7 @@ const TaskDetailsView: React.FC<Props> = ({
                     />
                     <Text>Created: {formatDistanceToNow(task.creationDate.toDate())} ago</Text>
                     {task.modifyDate && <Text>Modified: {formatDistanceToNow(task.modifyDate.toDate())} ago</Text>}
-                    <Picker selectedValue={columnId} onValueChange={value => handleColumnChange(value)}>
+                    <Picker selectedValue={newColumnId} onValueChange={value => handleColumnChange(value)}>
                         {columns.map(c => (
                             <Picker.Item label={c.name} value={c.id} key={c.id} />
                         ))}
