@@ -11,48 +11,65 @@ interface Props {
 const SignUp: React.FC<Props> = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     function handleSignUp() {
         setLoading(true);
 
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(value => {
-                setLoading(false);
-                navigation.navigate("UserSettings");
-            })
-            .catch(e => {
-                setLoading(false);
-                setErrorMessage(e.message);
-            });
+        if (password1 === password2) {
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(email, password1)
+                .then(value => {
+                    setLoading(false);
+                    navigation.navigate("UserSettings");
+                })
+                .catch(e => {
+                    setLoading(false);
+                    setErrorMessage(e.message);
+                });
+        } else {
+            setLoading(false);
+            setErrorMessage("Passwords do not match");
+        }
     }
 
     return (
         <View style={styles.container}>
-            <Text>Sign up</Text>
-            {/* <Button title="Sign Up by Google" onPress={handleSignUpByGoogle} /> */}
-            {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            {loading && <ActivityIndicator size="small" />}
-            <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} />
-            <TextInput
-                secureTextEntry
-                placeholder="Password"
-                autoCapitalize="none"
-                style={styles.textInput}
-                onChangeText={password => setPassword(password)}
-                value={password}
-            />
-            <View style={styles.signupBtnWrapper}>
-                <Button title="Sign Up" onPress={handleSignUp} />
+            <View style={styles.form}>
+                <Text>Sign up</Text>
+                {/* <Button title="Sign Up by Google" onPress={handleSignUpByGoogle} /> */}
+                {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
+                {loading && <ActivityIndicator size="small" />}
+                <TextInput placeholder="Email" autoCapitalize="none" style={styles.textInput} onChangeText={email => setEmail(email)} value={email} />
+                <TextInput
+                    secureTextEntry
+                    placeholder="Password"
+                    autoCapitalize="none"
+                    style={styles.textInput}
+                    onChangeText={password => setPassword1(password)}
+                    value={password1}
+                />
+                <TextInput
+                    secureTextEntry
+                    placeholder="Repeat password"
+                    autoCapitalize="none"
+                    style={styles.textInput}
+                    onChangeText={password => setPassword2(password)}
+                    value={password2}
+                />
             </View>
-            <View style={styles.signinWrapper}>
-                <Text>Already have an account?</Text>
-                <TouchableHighlight style={styles.signinBtn} onPress={() => navigation.navigate("SignIn")}>
-                    <Text style={styles.signinBtnTxt}>Sign in</Text>
-                </TouchableHighlight>
+            <View style={styles.btnsWrapper}>
+                <View style={styles.signupBtnWrapper}>
+                    <Button title="Sign Up" onPress={handleSignUp} />
+                </View>
+                <View style={styles.signinWrapper}>
+                    <TouchableHighlight style={styles.signinBtn} onPress={() => navigation.navigate("SignIn")}>
+                        <Text style={styles.signinBtnTxt}>Already have an account? Sign in</Text>
+                    </TouchableHighlight>
+                </View>
             </View>
         </View>
     );
@@ -61,21 +78,34 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-around",
         alignItems: "center",
+    },
+    form: {
+        flex: 1,
+        width: "80%",
+        justifyContent: "center",
+        alignItems: "center"
     },
     textInput: {
         height: 40,
-        width: "90%",
+        width: "100%",
         borderColor: "gray",
         borderWidth: 1,
         marginTop: 8,
+        padding: 8,
+        borderRadius: 5,
+    },
+    btnsWrapper: {
+        // position: "absolute",
+        // bottom: 0,
+        marginBottom: 20,
     },
     signupBtnWrapper: {
         marginTop: 10,
     },
     signinWrapper: {
-        marginTop: 10,
+        marginTop: 20,
         flex: 0,
         flexDirection: "row",
         justifyContent: "center",

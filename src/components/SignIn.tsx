@@ -32,26 +32,29 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Sign in</Text>
-            {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            {loading && <ActivityIndicator size="small" />}
-            <TextInput style={styles.textInput} autoCapitalize="none" placeholder="Email" onChangeText={email => setEmail(email)} value={email} />
-            <TextInput
-                secureTextEntry
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholder="Password"
-                onChangeText={password => setPassword(password)}
-                value={password}
-            />
-            <View style={styles.confirmBtnWrapper}>
-                <Button title="Sign in" onPress={handleSignIn} />
+            <View style={styles.form}>
+                <Text>Sign in</Text>
+                {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
+                {loading && <ActivityIndicator size="small" />}
+                <TextInput style={styles.textInput} autoCapitalize="none" placeholder="Email" onChangeText={email => setEmail(email)} value={email} />
+                <TextInput
+                    secureTextEntry
+                    style={styles.textInput}
+                    autoCapitalize="none"
+                    placeholder="Password"
+                    onChangeText={password => setPassword(password)}
+                    value={password}
+                />
             </View>
-            <View style={styles.signWrapper}>
-                <Text>Don't have an account?</Text>
-                <TouchableHighlight style={styles.signBtn} onPress={() => navigation.navigate("SignUp")}>
-                    <Text style={styles.signBtnTxt}>Sign up</Text>
-                </TouchableHighlight>
+            <View style={styles.btnsWrapper}>
+                <View style={styles.confirmBtnWrapper}>
+                    <Button title="Sign in" onPress={handleSignIn} />
+                </View>
+                <View style={styles.signWrapper}>
+                    <TouchableHighlight style={styles.signBtn} onPress={() => navigation.navigate("SignUp")}>
+                        <Text style={styles.signBtnTxt}>Don't have an account? Sign up</Text>
+                    </TouchableHighlight>
+                </View>
             </View>
         </View>
     );
@@ -60,21 +63,34 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    form: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        width: "80%"
     },
     textInput: {
         height: 40,
-        width: "90%",
+        width: "100%",
         borderColor: "gray",
         borderWidth: 1,
         marginTop: 8,
+        padding: 5,
+        borderRadius: 5,
+    },
+    btnsWrapper: {
+        position: "absolute",
+        bottom: 0,
+        marginBottom: 20,
     },
     confirmBtnWrapper: {
         marginTop: 10,
     },
     signWrapper: {
-        marginTop: 10,
+        marginTop: 20,
         flex: 0,
         flexDirection: "row",
         justifyContent: "center",
