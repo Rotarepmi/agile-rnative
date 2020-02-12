@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, View, Text, FlatList, KeyboardAvoidingView, ScrollView } from "react-native";
+import { StyleSheet, Dimensions, View, Platform, FlatList, KeyboardAvoidingView, ScrollView } from "react-native";
 
 import { Column } from "../../../utils/Types";
 import { KanbanColumnItem } from "../columnItem";
@@ -15,61 +15,49 @@ interface Props {
     keyboardVisible: boolean;
 }
 
-const KanbanColumnView: React.FC<Props> = ({
-    column,
-    addingTask,
-    setAddingTask,
-    keyboardVisible,
-}) => {
+const KanbanColumnView: React.FC<Props> = ({ column, addingTask, setAddingTask, keyboardVisible }) => {
     return (
         <View style={styles.container}>
             <ColumnHeader name={column.name} id={column.id} />
 
-            <KeyboardAvoidingView style={styles.flatListContainer}>
-                {/* <FlatList
-                    // contentContainerStyle={styles.flatList}
-                    column={column.tasks}
-                    renderItem={({ item }) => <KanbanColumnItem key={item.id} column={item} />}
-                    // ListFooterComponent={() =>
-                    //     addingTask ? <KanbanNewColumnItem newTaskTitle={newTaskTitle} handleNewTaskTitleChange={handleNewTaskTitleChange} /> : null
-                    // }
-                /> */}
+            <KeyboardAvoidingView style={styles.flatListContainer} behavior={Platform.OS === "ios" ? "position" : null}>
                 <ScrollView>
-                    {column.tasks && column.tasks.map(item => (
-                        <KanbanColumnItem key={item.id} column={item} columnId={column.id} />
-                    ))}
-                    {addingTask && (
-                        <NewTask
-                            column={column}
-                            setAddingTask={setAddingTask}
-                            keyboardVisible={keyboardVisible}
-                        />
-                    )}
+                    <View style={styles.list}>
+                        {column.tasks && column.tasks.map(item => <KanbanColumnItem key={item.id} column={item} columnId={column.id} />)}
+                        {addingTask && <NewTask column={column} setAddingTask={setAddingTask} keyboardVisible={keyboardVisible} />}
+                        <AddNewTask handleAddTaskClick={setAddingTask} />
+                    </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-            {!keyboardVisible && <AddNewTask handleAddTaskClick={setAddingTask} />}
-            {/* <AddNewTask handleAddTaskClick={handleAddTaskClick} /> */}
+            {/* {!keyboardVisible && <AddNewTask handleAddTaskClick={setAddingTask} />} */}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        top: 0,
         flex: 1,
         width: SCREEN_DIMENSIONS.width,
         height: "auto",
         display: "flex",
         alignContent: "center",
         justifyContent: "center",
+        overflow: "hidden",
     },
-    flatList: {
+    list: {
         flex: 1,
+        width: SCREEN_DIMENSIONS.width,
+        height: "auto",
+        display: "flex",
+        alignContent: "center",
+        justifyContent: "center",
+        paddingLeft: 30,
+        paddingRight: 30,
     },
     flatListContainer: {
         flex: 1,
         paddingTop: 0,
-        paddingLeft: 30,
-        paddingRight: 30,
         paddingBottom: 10,
     },
 });

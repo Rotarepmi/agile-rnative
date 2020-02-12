@@ -8,6 +8,7 @@ interface Props {
     column: {
         id: string;
         name: string;
+        temporary?: boolean;
     };
     columnId: Column["id"];
 }

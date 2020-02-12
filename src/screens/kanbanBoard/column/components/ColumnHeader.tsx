@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 15,
         backgroundColor: "#fff",
+        zIndex: 10
         // color: "#000"
     }
 })
