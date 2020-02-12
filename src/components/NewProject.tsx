@@ -15,9 +15,15 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
     const [projectName, setProjectName] = useState("");
+    const [projectDesc, setProjectDesc] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    function handleUpdate() {
+    function handleSave() {
+        if (!projectName.length) {
+            setErrorMessage("Provide project name");
+            return;
+        }
+
         setLoading(true);
         const user = firebase.auth().currentUser;
         const newProjectRef = db.collection("projects").doc();
@@ -130,18 +136,29 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Create new project</Text>
-            {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
-            {loading && <ActivityIndicator size="small" />}
-            <TextInput
-                placeholder="Project name"
-                autoCapitalize="none"
-                style={styles.textInput}
-                onChangeText={value => setProjectName(value)}
-                value={projectName}
-            />
-            <View style={styles.signupBtnWrapper}>
-                <Button title="Save" onPress={handleUpdate} />
+            <View style={styles.form}>
+                <Text>Create new project</Text>
+                {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
+                {loading && <ActivityIndicator size="small" />}
+                <TextInput
+                    placeholder="Project name"
+                    autoCapitalize="none"
+                    style={styles.textInput}
+                    onChangeText={value => setProjectName(value)}
+                    value={projectName}
+                />
+                <TextInput
+                    placeholder="Project description"
+                    autoCapitalize="none"
+                    style={styles.textInputDesc}
+                    numberOfLines={8}
+                    multiline
+                    onChangeText={value => setProjectDesc(value)}
+                    value={projectDesc}
+                />
+            </View>
+            <View style={styles.btnWrapper}>
+                <Button title="Create project" onPress={handleSave} />
             </View>
         </View>
     );
@@ -150,31 +167,36 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    form: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        width: "80%",
     },
     textInput: {
         height: 40,
-        width: "90%",
+        width: "100%",
         borderColor: "gray",
         borderWidth: 1,
         marginTop: 8,
+        padding: 5,
+        borderRadius: 5,
     },
-    signupBtnWrapper: {
+    textInputDesc: {
+        width: "100%",
+        borderColor: "gray",
+        borderWidth: 1,
+        marginTop: 8,
+        padding: 5,
+        borderRadius: 5,
+        textAlignVertical: "top"
+    },
+    btnWrapper: {
         marginTop: 10,
-    },
-    signinWrapper: {
-        marginTop: 10,
-        flex: 0,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    signinBtn: {
-        marginLeft: 5,
-    },
-    signinBtnTxt: {
-        color: "#0990ff",
+        marginBottom: 20,
     },
 });
 
