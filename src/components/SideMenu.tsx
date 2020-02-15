@@ -21,13 +21,11 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
     useEffect(() => {
         db.collection("users")
             .doc(currentUser.uid)
-            .onSnapshot(
-                qSnap => {
-                    const projects = qSnap.data().projects;
-                    projects && setUserProjects(projects);
-                }
-            )
-            // .catch(e => console.log(e));
+            .onSnapshot(qSnap => {
+                const projects = qSnap.data().projects;
+                projects && setUserProjects(projects);
+            });
+        // .catch(e => console.log(e));
     }, []);
 
     function navigateToScreen(route) {
@@ -69,6 +67,19 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                             ))}
                     </View>
                 </View>
+                {/* <View>
+                    <Text style={styles.sectionHeadingStyle}>Actions</Text>
+                    <View style={styles.navSectionStyle}>
+                        <TouchableHighlight
+                            onPress={() => {
+                                navigateToScreen("ShareScreen");
+                                navigation.closeDrawer();
+                            }}
+                        >
+                            <Text style={styles.navItemStyle}>Share project</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View> */}
             </ScrollView>
             <View style={styles.footerContainer}>
                 <Text>|| {currentUser.displayName}</Text>
