@@ -46,7 +46,7 @@ const TaskDetailsView: React.FC<Props> = ({
     if (!task) return null;
     
     return (
-        <Modal animationType="slide" transparent={false} visible={detailsVisible}>
+        <Modal animationType="fade" transparent={false} visible={detailsVisible}>
             <View>
                 <View style={styles.header}>
                     <TouchableHighlight style={styles.closeBtn} onPress={setDetailsVisible}>
