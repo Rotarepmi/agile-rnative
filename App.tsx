@@ -12,7 +12,7 @@ import { store } from "./src/redux/store";
 
 import MainScreen from "./src/screens/MainScreen";
 import { KanbanBoard } from "./src/screens/kanbanBoard";
-import { Initialize, SignIn, SignUp, UserSetup, NewProject, CreateJoinProject, UserSettings, ShareScreen } from "./src/screens";
+import { Initialize, SignIn, SignUp, UserSetup, NewProject, CreateJoinProject, UserSettings, ShareScreen, JoinScreen } from "./src/screens";
 import SideMenu from "./src/components/SideMenu";
 
 
@@ -47,7 +47,12 @@ const MainStack = createStackNavigator({
             title: "Create new project",
         },
     },
-    // JoinProject,
+    JoinProject: {
+        screen: JoinScreen,
+        navigationOptions: {
+            title: "Join to project"
+        }
+    },
     UserSettings: {
         screen: UserSettings,
         navigationOptions: {

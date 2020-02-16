@@ -8,3 +8,4 @@ export { default as UserSettings } from "./UserSettings";
 export { default as NewProject } from "./NewProject";
 export { default as ShareScreen } from "./ShareScreen";
 export { default as CreateJoinProject } from "./CreateJoinProject";
+export { default as JoinScreen } from "./JoinScreen";
