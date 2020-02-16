@@ -12,79 +12,18 @@ import { store } from "./src/redux/store";
 
 import MainScreen from "./src/screens/MainScreen";
 import { KanbanBoard } from "./src/screens/kanbanBoard";
-import { Initialize, SignIn, SignUp, UserSetup, NewProject, CreateJoinProject, UserSettings } from "./src/screens";
+import { Initialize, SignIn, SignUp, UserSetup, NewProject, CreateJoinProject, UserSettings, ShareScreen } from "./src/screens";
 import SideMenu from "./src/components/SideMenu";
 
-// const MainScreenStackNavigator = createStackNavigator({
-//     MainScreen: {
-//         screen: MainScreen,
-//         navigationOptions: ({ navigation }) => {
-//             return {
-//                 title: "Agiler",
-//                 headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
-//                 gestureEnabled: false,
-//             };
-//         },
-//     },
-//     NewProject: {
-//         screen: NewProject,
-//         navigationOptions: {
-//             title: "New Project",
-//             headerBackTitleVisible: false,
-//             gestureEnabled: false,
-//         },
-//     },
-// });
-
-// const KanbanStackNavigator = createStackNavigator({
-//     KanbanBoard: {
-//         screen: KanbanBoard,
-//         navigationOptions: ({ navigation }) => {
-//             const { routeName } = navigation.state.params || navigation.state;
-
-//             return {
-//                 title: routeName,
-//                 headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
-//                 gestureEnabled: false,
-//             };
-//         },
-//     },
-// });
-
-// const DashboardStackNavigator = createStackNavigator(
-//     {
-//         Welcome: {
-//             screen: MainScreenStackNavigator,
-//         },
-//         KanbanBoard: {
-//             screen: KanbanStackNavigator,
-//         },
-//         ShareScreen,
-//     },
-//     {
-//         defaultNavigationOptions: {
-//             headerShown: false,
-//         },
-//     },
-// );
-
-// const AppDrawer = createDrawerNavigator(
-//     {
-//         Dashboard: {
-//             screen: DashboardStackNavigator,
-//         },
-//     },
-//     {
-//         contentComponent: SideMenu,
-//     },
-// );
 
 const ProjectStack = createDrawerNavigator({
     Tasks: {
         screen: KanbanBoard,
     },
     // Chat,
-    // Share
+    Share: {
+        screen: ShareScreen
+    }
 }, {
     contentComponent: SideMenu,
 });
