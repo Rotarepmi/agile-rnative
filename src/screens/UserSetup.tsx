@@ -26,10 +26,11 @@ const UserSetup: React.FC<Props> = ({ navigation }) => {
                     .set({
                         email: user.email,
                         name: displayName,
+                        projects: []
                     })
                     .then(() => {
                         setLoading(false);
-                        navigation.navigate("Welcome");
+                        navigation.navigate("CreateJoinProject");
                     })
                     .catch(e => {
                         setLoading(false);

@@ -48,7 +48,7 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
     function handleProjectPress(id: any, name: any) {
         dispatch(setActiveProject(id));
-        navigation.navigate("KanbanBoard", { projectId: id, routeName: name });
+        navigation.navigate("Tasks", { projectId: id, routeName: name });
         navigation.closeDrawer();
     }
 
