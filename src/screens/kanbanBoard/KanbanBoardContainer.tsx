@@ -20,43 +20,43 @@ const KanbanBoardContainer: React.FC = () => {
     const fetchProject = useCallback(projectId => {
         setLoading(true);
 
-        if (!!projectId) {
-            db.collection("projects")
-                .doc(projectId)
-                .collection("tasksLists")
-                .orderBy("place")
-                .get()
-                .then(querySnap => {
-                    let cols = [];
-
-                    querySnap.forEach(result => {
-                        cols.push({ id: result.id, ...result.data() });
-                    });
-                    return cols;
-                })
-                .then(cols => {
-                    dispatch(tasksFetchSuccess(cols));
-                    setLoading(false);
-                })
-                .catch(e => console.log(e));
-        }
-
         // if (!!projectId) {
         //     db.collection("projects")
         //         .doc(projectId)
         //         .collection("tasksLists")
         //         .orderBy("place")
-        //         .onSnapshot(querySnapshot => {
+        //         .get()
+        //         .then(querySnap => {
         //             let cols = [];
 
-        //             querySnapshot.forEach(result => {
+        //             querySnap.forEach(result => {
         //                 cols.push({ id: result.id, ...result.data() });
         //             });
-
+        //             return cols;
+        //         })
+        //         .then(cols => {
         //             dispatch(tasksFetchSuccess(cols));
         //             setLoading(false);
-        //         });
+        //         })
+        //         .catch(e => console.log(e));
         // }
+
+        if (!!projectId) {
+            db.collection("projects")
+                .doc(projectId)
+                .collection("tasksLists")
+                .orderBy("place")
+                .onSnapshot(querySnapshot => {
+                    let cols = [];
+
+                    querySnapshot.forEach(result => {
+                        cols.push({ id: result.id, ...result.data() });
+                    });
+
+                    dispatch(tasksFetchSuccess(cols));
+                    setLoading(false);
+                });
+        }
     }, []);
 
     useEffect(() => {

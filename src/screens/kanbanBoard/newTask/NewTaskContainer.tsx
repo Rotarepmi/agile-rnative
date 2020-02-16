@@ -36,8 +36,8 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
                 modifyDate: firebase.firestore.Timestamp.fromDate(new Date()),
                 creator: {
                     id: currentUser.uid,
-                    name: currentUser.displayName
-                }
+                    name: currentUser.displayName,
+                },
             })
             .then(() => console.log("Added task to tasks"))
             .catch(e => console.log(e));
@@ -54,8 +54,8 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
                         name: newTaskTitle,
                         creator: {
                             id: currentUser.uid,
-                            name: currentUser.displayName
-                        }
+                            name: currentUser.displayName,
+                        },
                     }),
                 },
                 { merge: true },
@@ -69,25 +69,25 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
 
         Promise.all([addToTasks, addToProject])
             .then(() => {
-                db.collection("projects")
-                    .doc(activeProject)
-                    .collection("tasksLists")
-                    .orderBy("place")
-                    .get()
-                    .then(querySnap => {
-                        let cols = [];
+                // db.collection("projects")
+                //     .doc(activeProject)
+                //     .collection("tasksLists")
+                //     .orderBy("place")
+                //     .get()
+                //     .then(querySnap => {
+                //         let cols = [];
 
-                        querySnap.forEach(result => {
-                            cols.push({ id: result.id, ...result.data() });
-                        });
-                        return cols;
-                    })
-                    .then(cols => {
-                        dispatch(tasksFetchSuccess(cols));
-                        setAddingTask(false);
-                        keyboardVisible && Keyboard.dismiss();
-                    })
-                    .catch(e => console.log(e));
+                //         querySnap.forEach(result => {
+                //             cols.push({ id: result.id, ...result.data() });
+                //         });
+                //         return cols;
+                //     })
+                //     .then(cols => {
+                //         dispatch(tasksFetchSuccess(cols));
+                setAddingTask(false);
+                //         keyboardVisible && Keyboard.dismiss();
+                //     })
+                //     .catch(e => console.log(e));
             })
             .catch(e => console.log(e));
     }
