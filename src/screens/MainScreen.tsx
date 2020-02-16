@@ -48,8 +48,7 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
     function handleProjectPress(id: any, name: any) {
         dispatch(setActiveProject(id));
-        navigation.navigate("Tasks", { projectId: id, routeName: name });
-        navigation.closeDrawer();
+        navigation.navigate("ProjectStack", { projectId: id, routeName: name });
     }
 
     return (
@@ -109,6 +108,9 @@ const styles = StyleSheet.create({
     },
     touchableListItem: {
         backgroundColor: "#fff",
+        marginTop: 10,
+        marginBottom: 10,
+        borderRadius: 3
     },
     listItemText: {
         textAlign: "center",

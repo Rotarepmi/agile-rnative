@@ -79,26 +79,55 @@ import SideMenu from "./src/components/SideMenu";
 //     },
 // );
 
-const ProjectStack = createDrawerNavigator(
-{
+const ProjectStack = createDrawerNavigator({
     Tasks: {
-        screen: KanbanBoard
+        screen: KanbanBoard,
     },
     // Chat,
     // Share
-}
-);
+}, {
+    contentComponent: SideMenu,
+});
 
 const MainStack = createStackNavigator({
-    MainScreen,
-    CreateJoinProject,
+    MainScreen: {
+        screen: MainScreen,
+        navigationOptions: {
+            title: "Agiler",
+        },
+    },
+    CreateJoinProject: {
+        screen: CreateJoinProject,
+        navigationOptions: {
+            title: "Project setup",
+        },
+    },
     CreateProject: {
-        screen: NewProject
+        screen: NewProject,
+        navigationOptions: {
+            title: "Create new project",
+        },
     },
     // JoinProject,
-    UserSettings,
+    UserSettings: {
+        screen: UserSettings,
+        navigationOptions: {
+            title: "User settings",
+        },
+    },
     // ChangePassword,
-    ProjectStack,
+    ProjectStack: {
+        screen: ProjectStack,
+        navigationOptions: ({ navigation }) => {
+            const { routeName } = navigation.state.params || navigation.state;
+
+            return {
+                title: routeName,
+                headerLeft: () => <Icon style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />,
+                gestureEnabled: false,
+            };
+        },
+    },
 });
 
 const AppContainer = createAppContainer(

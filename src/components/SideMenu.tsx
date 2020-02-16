@@ -5,84 +5,71 @@ import { useDispatch } from "react-redux";
 
 import firebase, { db } from "../utils/firebase";
 import { setActiveProject } from "../redux/actions";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerContentComponentProps } from "react-navigation-drawer";
+import { theme } from "../utils/theme";
 
 interface Props {
     navigation: NavigationSwitchProp;
 }
 
 const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }) => {
-    const dispatch = useDispatch();
     const currentUser = firebase.auth().currentUser;
 
-    const [userProjects, setUserProjects] = useState<{ id: string; name: string }[]>([]);
-
-    useEffect(() => {
-        db.collection("users")
-            .doc(currentUser.uid)
-            .onSnapshot(qSnap => {
-                const projects = qSnap.data().projects;
-                projects && setUserProjects(projects);
-            });
-        // .catch(e => console.log(e));
-    }, []);
-
-    function navigateToScreen(route) {
-        // const navigateAction = NavigationActions.navigate({
-        //     routeName: route,
-        // });
+    function navigateToScreen(route: string) {
         navigation.navigate(route);
-    }
-
-    function handleProjectPress(id: any, name: any) {
-        dispatch(setActiveProject(id));
-        navigation.navigate("KanbanBoard", { projectId: id, routeName: name });
-        navigation.closeDrawer();
     }
 
     return (
         <View style={styles.container}>
             <ScrollView>
                 <View>
-                    <View style={styles.navSectionStyle}>
-                        <TouchableHighlight
+                    <View style={{...styles.navSectionStyle, ...styles.firstSection}}>
+                        <TouchableOpacity
                             onPress={() => {
-                                navigateToScreen("Welcome");
-                                navigation.closeDrawer();
+                                navigateToScreen("MainScreen");
                             }}
                         >
-                            <Text style={styles.navItemStyle}>Home screen</Text>
-                        </TouchableHighlight>
+                            <Text style={styles.navItemStyle}>Go to Home screen</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-                <View>
-                    <Text style={styles.sectionHeadingStyle}>Projects</Text>
                     <View style={styles.navSectionStyle}>
-                        {userProjects &&
-                            userProjects.map(pr => (
-                                <TouchableHighlight key={pr.id} onPress={() => handleProjectPress(pr.id, pr.name)}>
-                                    <Text style={styles.navItemStyle}>{pr.name}</Text>
-                                </TouchableHighlight>
-                            ))}
-                    </View>
-                </View>
-                {/* <View>
-                    <Text style={styles.sectionHeadingStyle}>Actions</Text>
-                    <View style={styles.navSectionStyle}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             onPress={() => {
-                                navigateToScreen("ShareScreen");
-                                navigation.closeDrawer();
+                                navigateToScreen("Tasks");
+                            }}
+                        >
+                            <Text style={styles.navItemStyle}>Project Tasks</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.navSectionStyle}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigateToScreen("Chat");
+                            }}
+                        >
+                            <Text style={styles.navItemStyle}>Project Chat</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.navSectionStyle}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigateToScreen("Share");
                             }}
                         >
                             <Text style={styles.navItemStyle}>Share project</Text>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
-                </View> */}
+                </View>
             </ScrollView>
             <View style={styles.footerContainer}>
-                <Text>|| {currentUser.displayName}</Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigateToScreen("UserSettings");
+                    }}
+                >
+                    <Text style={styles.footerItem}>|| {currentUser.displayName}</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -90,23 +77,31 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
         flex: 1,
+    },
+    firstSection: {
+        borderBottomColor: "lightgrey",
+        borderBottomWidth: 1
     },
     navItemStyle: {
         padding: 10,
     },
     navSectionStyle: {
-        backgroundColor: "lightgrey",
+        marginBottom: 10
     },
     sectionHeadingStyle: {
         paddingVertical: 10,
         paddingHorizontal: 5,
     },
     footerContainer: {
-        padding: 20,
         backgroundColor: "lightgrey",
     },
+    footerItem: {
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
 });
 
 export default SideMenu;
