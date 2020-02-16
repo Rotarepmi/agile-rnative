@@ -109,7 +109,7 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
             .then(() => {
                 setLoading(false);
                 dispatch(setActiveProject(newProjectRef.id));
-                navigation.navigate("Tasks", { projectId: newProjectRef.id, routeName: projectName });
+                navigation.navigate("ProjectStack", { projectId: newProjectRef.id, routeName: projectName });
             })
             .catch(e => {
                 setLoading(false);

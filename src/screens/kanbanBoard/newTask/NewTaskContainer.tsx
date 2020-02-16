@@ -17,6 +17,7 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
     const columns = useSelector(state => state.tasks.columns);
     const activeProject = useSelector(state => state.projects.activeProject);
     const dispatch = useDispatch();
+    const currentUser = firebase.auth().currentUser;
 
     const [newTaskTitle, setNewTaskTitle] = useState("");
 
@@ -33,6 +34,10 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
                 description: "",
                 creationDate: firebase.firestore.Timestamp.fromDate(new Date()),
                 modifyDate: firebase.firestore.Timestamp.fromDate(new Date()),
+                creator: {
+                    id: currentUser.uid,
+                    name: currentUser.displayName
+                }
             })
             .then(() => console.log("Added task to tasks"))
             .catch(e => console.log(e));
@@ -47,6 +52,10 @@ const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisi
                     tasks: firebase.firestore.FieldValue.arrayUnion({
                         id: newTaskRef.id,
                         name: newTaskTitle,
+                        creator: {
+                            id: currentUser.uid,
+                            name: currentUser.displayName
+                        }
                     }),
                 },
                 { merge: true },
