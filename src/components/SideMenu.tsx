@@ -1,19 +1,12 @@
-import React, { useEffect, useState, FunctionComponent } from "react";
-import { NavigationActions, NavigationSwitchProp } from "react-navigation";
+import React from "react";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
-
-import firebase, { db } from "../utils/firebase";
-import { setActiveProject } from "../redux/actions";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesome } from "@expo/vector-icons";
 import { DrawerContentComponentProps } from "react-navigation-drawer";
-import { theme } from "../utils/theme";
 
-interface Props {
-    navigation: NavigationSwitchProp;
-}
+import firebase from "../utils/firebase";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }) => {
+const SideMenu: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
     const currentUser = firebase.auth().currentUser;
 
     function navigateToScreen(route: string) {
@@ -30,7 +23,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                                 navigateToScreen("MainScreen");
                             }}
                         >
-                            <Text style={styles.navItemStyle}>Go to Home screen</Text>
+                            <Text style={styles.navItemStyle}><FontAwesome name="home" size={15} /> Go to Home screen</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.navSectionStyle}>
@@ -39,7 +32,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                                 navigateToScreen("Tasks");
                             }}
                         >
-                            <Text style={styles.navItemStyle}>Project Tasks</Text>
+                            <Text style={styles.navItemStyle}><FontAwesome name="list" size={15} />  Project Tasks</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.navSectionStyle}>
@@ -48,7 +41,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                                 navigateToScreen("Chat");
                             }}
                         >
-                            <Text style={styles.navItemStyle}>Project Chat</Text>
+                            <Text style={styles.navItemStyle}><FontAwesome name="comments" size={15} /> Project Chat</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.navSectionStyle}>
@@ -57,7 +50,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                                 navigateToScreen("Share");
                             }}
                         >
-                            <Text style={styles.navItemStyle}>Share project</Text>
+                            <Text style={styles.navItemStyle}><FontAwesome name="share" size={15} /> Share project</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -68,7 +61,7 @@ const SideMenu: FunctionComponent<DrawerContentComponentProps> = ({ navigation }
                         navigateToScreen("UserSettings");
                     }}
                 >
-                    <Text style={styles.footerItem}>|| {currentUser.displayName}</Text>
+                    <Text style={styles.footerItem}><FontAwesome name="user" size={15} /> {currentUser.displayName}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -100,7 +93,10 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        flex: 0,
+        alignItems: "center",
+        justifyContent: "center"
     }
 });
 
