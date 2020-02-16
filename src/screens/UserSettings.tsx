@@ -44,6 +44,7 @@ const UserSettings: React.FC = () => {
                     onChangeText={displayName => setDisplayName(displayName)}
                     value={displayName}
                     onSubmitEditing={handleUpdate}
+                    editable={false}
                 />
                 <TextInput
                     placeholder="User email"
