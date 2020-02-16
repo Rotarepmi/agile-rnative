@@ -54,22 +54,27 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <FlatList
-                contentContainerStyle={styles.listStyle}
-                data={userProjects}
-                renderItem={({ item }) => (
-                    <TouchableHighlight
-                        style={styles.touchableListItem}
-                        underlayColor="lightgrey"
-                        onPress={() => handleProjectPress(item.id, item.name)}
-                    >
-                        <Text style={styles.listItemText}>{item.name}</Text>
-                    </TouchableHighlight>
-                )}
-                keyExtractor={item => item.id}
-            />
+            {userProjects.length ? (
+                <FlatList
+                    contentContainerStyle={styles.listStyle}
+                    data={userProjects}
+                    renderItem={({ item }) => (
+                        <TouchableHighlight
+                            style={styles.touchableListItem}
+                            underlayColor="lightgrey"
+                            onPress={() => handleProjectPress(item.id, item.name)}
+                        >
+                            <Text style={styles.listItemText}>{item.name}</Text>
+                        </TouchableHighlight>
+                    )}
+                    keyExtractor={item => item.id}
+                />
+            ) : (
+                <View style={styles.centeredContent}>
+                    <Text>Hi {currentUser && currentUser.displayName}!</Text>
+                </View>
+            )}
 
-            {/* <Text>Hi {currentUser && currentUser.displayName}!</Text> */}
             <View style={styles.bottomButtons}>
                 <TouchableHighlight style={{ ...styles.button, ...styles.userButton }} onPress={() => navigation.navigate("UserSettings")}>
                     <FontAwesome style={styles.buttonContent} name="user" size={25} />
@@ -77,12 +82,6 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
                 <TouchableHighlight style={{ ...styles.button, ...styles.projectButton }} onPress={() => navigation.navigate("CreateJoinProject")}>
                     <FontAwesome style={styles.buttonContent} name="plus" size={25} />
                 </TouchableHighlight>
-                {/* <View style={styles.btn}>
-                    <Button title="Create new project" onPress={() => navigation.navigate("CreateProject")} />
-                </View>
-                <View style={styles.btn}>
-                    <Button title="Sign out" onPress={() => firebase.auth().signOut()} />
-                </View> */}
             </View>
         </View>
     );
@@ -101,6 +100,11 @@ const styles = StyleSheet.create({
         paddingLeft: "10%",
         paddingRight: "10%",
         alignItems: "stretch",
+        justifyContent: "center",
+    },
+    centeredContent: {
+        flex: 1,
+        alignItems: "center",
         justifyContent: "center",
     },
     touchableListItem: {
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgb(0,0,0)",
         shadowOffset: { width: 45, height: 45 },
         shadowOpacity: 0.23,
-        elevation: 5
+        elevation: 5,
         // boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
     },
     buttonContent: {
@@ -139,6 +143,9 @@ const styles = StyleSheet.create({
     },
     projectButton: {
         backgroundColor: theme.primary,
+    },
+    buttonWelcome: {
+        marginTop: 20,
     },
 });
 
