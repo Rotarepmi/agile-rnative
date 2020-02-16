@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import firebase from "../utils/firebase";
+import { NavigationSwitchProp } from "react-navigation";
 interface Props {
-    navigation: any;
+    navigation: NavigationSwitchProp;
 }
 
 const Initialize: React.FC<Props> = ({ navigation }) => {

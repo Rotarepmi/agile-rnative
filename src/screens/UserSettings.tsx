@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ToastAndroid } from "react-native";
-import { NavigationSwitchProp } from "react-navigation";
 
-import firebase, { db } from "../utils/firebase";
+import firebase from "../utils/firebase";
 
-interface Props {
-    navigation: NavigationSwitchProp;
-}
-
-const UserSettings: React.FC<Props> = ({ navigation }) => {
+const UserSettings: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [displayName, setDisplayName] = useState("");
     const [userEmail, setUserEmail] = useState("");
