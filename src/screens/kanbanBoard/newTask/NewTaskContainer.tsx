@@ -38,7 +38,15 @@ const NewTaskContainer: React.FC<Props> = ({ column, addingTask, setAddingTask }
         getProject();
     }, []);
 
-    const handleSaveClick = useCallback(() => {
+    const closeTaskAdding = useCallback(() => {
+        setLoading(false);
+        setTitle("");
+        setDescription("");
+        setAssignedUser("");
+        setAddingTask(false);
+    }, []);
+
+    function handleSaveClick() {
         if (!title) return;
 
         setLoading(true);
@@ -71,29 +79,22 @@ const NewTaskContainer: React.FC<Props> = ({ column, addingTask, setAddingTask }
                         { merge: true },
                     )
                     .then(() => {
-                        setLoading(false);
-                        setAddingTask(false);
+                        closeTaskAdding();
 
                         ToastAndroid.show("Task added", ToastAndroid.SHORT);
                     })
                     .catch(e => {
-                        setLoading(false);
-                        setAddingTask(false);
+                        closeTaskAdding();
 
                         ToastAndroid.show(e.message, ToastAndroid.SHORT);
                     });
             })
             .catch(e => {
-                setLoading(false);
-                setAddingTask(false);
+                closeTaskAdding();
 
                 ToastAndroid.show(e.message, ToastAndroid.SHORT);
             });
-    }, []);
-
-    const closeTaskAdding = useCallback(() => {
-        setAddingTask(false);
-    }, []);
+    };
 
     return (
         <NewTaskView

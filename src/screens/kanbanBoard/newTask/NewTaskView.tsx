@@ -48,6 +48,7 @@ const NewTaskView: React.FC<Props> = ({
                     <TextInput
                         style={styles.title}
                         multiline
+                        maxLength={54}
                         value={title}
                         placeholder="Type in task title here"
                         onChangeText={(value: string) => setTitle(value)}
@@ -71,7 +72,7 @@ const NewTaskView: React.FC<Props> = ({
                 </Picker>
             </View>
             <View style={styles.buttonWrapper}>
-                {loading ? <ActivityIndicator style={styles.loader} size="small" /> : <Button title="Save" onPress={handleSaveClick} />}
+                {loading ? <ActivityIndicator size="small" /> : <Button title="Save" onPress={handleSaveClick} />}
             </View>
         </Modal>
     );
@@ -105,10 +106,10 @@ const styles = StyleSheet.create({
     },
     description: {
         paddingTop: 20,
-        paddingBottom: 80,
     },
     container: {
         flex: 1,
+        paddingBottom: 120,
         position: "relative",
     },
     pickerWrapper: {
@@ -122,13 +123,6 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         alignItems: "center",
         justifyContent: "center",
-    },
-    loader: {
-        position: "absolute",
-        bottom: 5,
-        right: 5,
-        paddingHorizontal: 10,
-        paddingVertical: 1,
     },
     label: {
         paddingLeft: 8,
