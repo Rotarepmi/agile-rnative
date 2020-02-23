@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TextInput, View, Button, ActivityIndicator, ToastAndroid } from "react-native";
 import { NavigationSwitchProp } from "react-navigation";
 import { useDispatch } from "react-redux";
 
@@ -110,6 +110,7 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
                 setLoading(false);
                 dispatch(setActiveProject(newProjectRef.id));
                 navigation.navigate("ProjectStack", { projectId: newProjectRef.id, routeName: projectName });
+                ToastAndroid.show("Project created", ToastAndroid.SHORT)
             })
             .catch(e => {
                 setLoading(false);

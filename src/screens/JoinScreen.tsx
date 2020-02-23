@@ -89,6 +89,7 @@ const JoinScreen: React.FC<Props> = ({ navigation }) => {
                 setLoading(false);
                 dispatch(setActiveProject(projDocRef.id));
                 navigation.navigate("ProjectStack", { projectId: projId, routeName: projName });
+                ToastAndroid.show("Joined to project", ToastAndroid.SHORT)
             })
             .catch(e => ToastAndroid.show(e.message, ToastAndroid.SHORT));
     }
