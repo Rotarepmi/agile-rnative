@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
+import { useSelector } from "react-redux";
 
 import { Column } from "../../../utils/Types";
 import KanbanColumnView from "./KanbanColumnView";

@@ -1,102 +1,115 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Keyboard } from "react-native";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { ToastAndroid } from "react-native";
 
 import firebase, { db } from "../../../utils/firebase";
 import NewTaskView from "./NewTaskView";
-import { updateTasksList, tasksFetchSuccess } from "../../../redux/actions";
 import { Column } from "../../../utils/Types";
 
 interface Props {
     column: Column;
+    addingTask: boolean;
     setAddingTask: React.Dispatch<React.SetStateAction<boolean>>;
-    keyboardVisible: boolean;
 }
 
-const NewTaskContainer: React.FC<Props> = ({ column, setAddingTask, keyboardVisible }) => {
-    const columns = useSelector(state => state.tasks.columns);
+const NewTaskContainer: React.FC<Props> = ({ column, addingTask, setAddingTask }) => {
     const activeProject = useSelector(state => state.projects.activeProject);
-    const dispatch = useDispatch();
     const currentUser = firebase.auth().currentUser;
+    const projectRef = useRef(db.collection("projects").doc(activeProject));
 
-    const [newTaskTitle, setNewTaskTitle] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [assignedUser, setAssignedUser] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [users, setUsers] = useState([]);
 
-    function handleSaveClick() {
-        const newTaskRef = db
-            .collection("projects")
-            .doc(activeProject)
-            .collection("tasks")
-            .doc();
+    const getProject = useCallback(() => {
+        projectRef.current
+            .get()
+            .then(qSnap => {
+                const data = qSnap.data();
 
-        const addToTasks = newTaskRef
+                setUsers(data.users);
+            })
+            .catch(e => ToastAndroid.show(e.message, ToastAndroid.SHORT));
+    }, []);
+
+    useEffect(() => {
+        getProject();
+    }, []);
+
+    const handleSaveClick = useCallback(() => {
+        if (!title) return;
+
+        setLoading(true);
+
+        const newTaskRef = projectRef.current.collection("tasks").doc();
+
+        newTaskRef
             .set({
-                name: newTaskTitle,
-                description: "",
+                name: title,
+                description,
                 creationDate: firebase.firestore.Timestamp.fromDate(new Date()),
                 modifyDate: firebase.firestore.Timestamp.fromDate(new Date()),
-                creator: {
-                    id: currentUser.uid,
-                    name: currentUser.displayName,
-                },
+                creator: currentUser.uid,
+                assignedUser,
             })
-            .then(() => console.log("Added task to tasks"))
-            .catch(e => console.log(e));
-
-        const addToProject = db
-            .collection("projects")
-            .doc(activeProject)
-            .collection("tasksLists")
-            .doc(column.id)
-            .set(
-                {
-                    tasks: firebase.firestore.FieldValue.arrayUnion({
-                        id: newTaskRef.id,
-                        name: newTaskTitle,
-                        creator: {
-                            id: currentUser.uid,
-                            name: currentUser.displayName,
-                        },
-                    }),
-                },
-                { merge: true },
-            )
             .then(() => {
-                console.log("Added task to project");
+                db.collection("projects")
+                    .doc(activeProject)
+                    .collection("tasksLists")
+                    .doc(column.id)
+                    .set(
+                        {
+                            tasks: firebase.firestore.FieldValue.arrayUnion({
+                                id: newTaskRef.id,
+                                name: title,
+                                creator: currentUser.uid,
+                                assignedUser,
+                            }),
+                        },
+                        { merge: true },
+                    )
+                    .then(() => {
+                        setLoading(false);
+                        setAddingTask(false);
+
+                        ToastAndroid.show("Task added", ToastAndroid.SHORT);
+                    })
+                    .catch(e => {
+                        setLoading(false);
+                        setAddingTask(false);
+
+                        ToastAndroid.show(e.message, ToastAndroid.SHORT);
+                    });
             })
             .catch(e => {
-                console.log(e);
-            });
-
-        Promise.all([addToTasks, addToProject])
-            .then(() => {
-                // db.collection("projects")
-                //     .doc(activeProject)
-                //     .collection("tasksLists")
-                //     .orderBy("place")
-                //     .get()
-                //     .then(querySnap => {
-                //         let cols = [];
-
-                //         querySnap.forEach(result => {
-                //             cols.push({ id: result.id, ...result.data() });
-                //         });
-                //         return cols;
-                //     })
-                //     .then(cols => {
-                //         dispatch(tasksFetchSuccess(cols));
+                setLoading(false);
                 setAddingTask(false);
-                //         keyboardVisible && Keyboard.dismiss();
-                //     })
-                //     .catch(e => console.log(e));
-            })
-            .catch(e => console.log(e));
-    }
 
-    function handleNewTaskTitleChange(value: string) {
-        setNewTaskTitle(value);
-    }
+                ToastAndroid.show(e.message, ToastAndroid.SHORT);
+            });
+    }, []);
 
-    return <NewTaskView newTaskTitle={newTaskTitle} handleNewTaskTitleChange={handleNewTaskTitleChange} handleSaveClick={handleSaveClick} />;
+    const closeTaskAdding = useCallback(() => {
+        setAddingTask(false);
+    }, []);
+
+    return (
+        <NewTaskView
+            title={title}
+            setTitle={setTitle}
+            description={description}
+            setDescription={setDescription}
+            assignedUser={assignedUser}
+            setAssignedUser={setAssignedUser}
+            users={users}
+            loading={loading}
+            handleSaveClick={handleSaveClick}
+            addingTask={addingTask}
+            closeTaskAdding={closeTaskAdding}
+        />
+    );
 };
 
 export default NewTaskContainer;
