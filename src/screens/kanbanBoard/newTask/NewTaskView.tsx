@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     },
     description: {
         paddingTop: 20,
-        paddingBottom: 20,
+        paddingBottom: 80,
     },
     container: {
         flex: 1,

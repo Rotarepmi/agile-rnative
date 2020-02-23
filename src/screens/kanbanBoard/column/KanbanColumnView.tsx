@@ -12,10 +12,9 @@ interface Props {
     column: Column;
     addingTask: boolean;
     setAddingTask: React.Dispatch<React.SetStateAction<boolean>>;
-    keyboardVisible: boolean;
 }
 
-const KanbanColumnView: React.FC<Props> = ({ column, addingTask, setAddingTask, keyboardVisible }) => {
+const KanbanColumnView: React.FC<Props> = ({ column, addingTask, setAddingTask }) => {
     return (
         <View style={styles.container}>
             <ColumnHeader name={column.name} id={column.id} />
@@ -24,7 +23,7 @@ const KanbanColumnView: React.FC<Props> = ({ column, addingTask, setAddingTask, 
                 <ScrollView>
                     <View style={styles.list}>
                         {column.tasks && column.tasks.map(item => <KanbanColumnItem key={item.id} column={item} columnId={column.id} />)}
-                        {addingTask && <NewTask column={column} setAddingTask={setAddingTask} keyboardVisible={keyboardVisible} />}
+                        <NewTask column={column} setAddingTask={setAddingTask} addingTask={addingTask} />
                         <AddNewTask handleAddTaskClick={setAddingTask} />
                     </View>
                 </ScrollView>

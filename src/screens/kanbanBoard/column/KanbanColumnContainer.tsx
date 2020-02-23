@@ -11,27 +11,27 @@ interface Props {
 
 const KanbanColumnContainer: React.FC<Props> = ({ column }) => {
     const [addingTask, setAddingTask] = useState(false);
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    // const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-        const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+    // useEffect(() => {
+    //     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+    //     const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
 
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, []);
+    //     return () => {
+    //         keyboardDidShowListener.remove();
+    //         keyboardDidHideListener.remove();
+    //     };
+    // }, []);
 
-    function _keyboardDidShow() {
-        setKeyboardVisible(true);
-    }
+    // function _keyboardDidShow() {
+    //     setKeyboardVisible(true);
+    // }
 
-    function _keyboardDidHide() {
-        setKeyboardVisible(false);
-    }
+    // function _keyboardDidHide() {
+    //     setKeyboardVisible(false);
+    // }
 
-    return <KanbanColumnView column={column} addingTask={addingTask} setAddingTask={setAddingTask} keyboardVisible={keyboardVisible} />;
+    return <KanbanColumnView column={column} addingTask={addingTask} setAddingTask={setAddingTask} />;
 };
 
 export default KanbanColumnContainer;
