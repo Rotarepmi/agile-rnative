@@ -22,7 +22,7 @@ const KanbanColumnView: React.FC<Props> = ({ column, addingTask, setAddingTask }
             <KeyboardAvoidingView style={styles.flatListContainer} behavior={Platform.OS === "ios" ? "position" : null}>
                 <ScrollView>
                     <View style={styles.list}>
-                        {column.tasks && column.tasks.map(item => <KanbanColumnItem key={item.id} column={item} columnId={column.id} />)}
+                        {column.tasks && column.tasks.map(item => <KanbanColumnItem key={item.id} task={item} columnId={column.id} />)}
                         <NewTask column={column} setAddingTask={setAddingTask} addingTask={addingTask} />
                         <AddNewTask handleAddTaskClick={setAddingTask} />
                     </View>

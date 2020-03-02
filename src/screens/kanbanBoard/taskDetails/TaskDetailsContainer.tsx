@@ -13,6 +13,8 @@ interface Props {
     data: {
         id: string;
         name: string;
+        creator: string;
+        assignedUser: string;
     };
     columnId: Column["id"];
     detailsVisible: boolean;

@@ -4,6 +4,7 @@ export interface Column {
     tasks: {
         id: string;
         name: string;
-        temporary?: boolean;
+        creator: string;
+        assignedUser: string;
     }[]
 }
