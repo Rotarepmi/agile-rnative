@@ -1,4 +1,4 @@
-import { Column } from "../../utils/Types";
+import { Column, Project } from "../../utils/Types";
 
 export const tasksFetchSuccess = (columns: Column[]) => {
     return {
@@ -14,9 +14,9 @@ export const updateTasksList = (columns: Column[]) => {
     }
 };
 
-export const setActiveProject = (projectId: string) => {
+export const setActiveProject = (project: Project) => {
     return {
         type: "SET_ACTIVE_PROJECT",
-        projectId
+        payload: { project }
     }
 }

@@ -15,7 +15,7 @@ interface Props {
 const NewTaskContainer: React.FC<Props> = ({ column, addingTask, setAddingTask }) => {
     const activeProject = useSelector(state => state.projects.activeProject);
     const currentUser = firebase.auth().currentUser;
-    const projectRef = useRef(db.collection("projects").doc(activeProject));
+    const projectRef = useRef(db.collection("projects").doc(activeProject.id));
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -64,7 +64,7 @@ const NewTaskContainer: React.FC<Props> = ({ column, addingTask, setAddingTask }
             })
             .then(() => {
                 db.collection("projects")
-                    .doc(activeProject)
+                    .doc(activeProject.id)
                     .collection("tasksLists")
                     .doc(column.id)
                     .set(

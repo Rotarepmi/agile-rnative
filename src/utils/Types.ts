@@ -8,3 +8,11 @@ export interface Column {
         assignedUser: string;
     }[]
 }
+
+export interface Project {
+    id: string;
+    name: string;
+    description: string;
+    owner: string;
+    users: { id: string, name: string }[];
+}

@@ -28,7 +28,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
     const taskRef = useRef(
         db
             .collection("projects")
-            .doc(activeProject)
+            .doc(activeProject.id)
             .collection("tasks")
             .doc(data.id),
     );
@@ -51,8 +51,6 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
             .catch(e => ToastAndroid.show(e.message, ToastAndroid.SHORT));
     }, []);
 
-    const changeColumn = useCallback(() => {}, []);
-
     useEffect(() => {
         if (detailsVisible) {
             getTask();
@@ -61,7 +59,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
 
     function updateTasks() {
         db.collection("projects")
-            .doc(activeProject)
+            .doc(activeProject.id)
             .collection("tasksLists")
             .orderBy("place")
             .get()
@@ -95,7 +93,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
         const updateInTasksLists = db.runTransaction(transaction => {
             const colRef = db
                 .collection("projects")
-                .doc(activeProject)
+                .doc(activeProject.id)
                 .collection("tasksLists")
                 .doc(columnId);
 
@@ -120,27 +118,6 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
                 .catch(e => console.log(e));
         });
 
-        // const updateInTasksLists = db
-        //     .collection("projects")
-        //     .doc(activeProject)
-        //     .collection("tasksLists")
-        //     .doc(columnId)
-        //     .set(
-        //         {
-        //             tasks: firebase.firestore.FieldValue.arrayUnion({
-        //                 id: data.id,
-        //                 name: title,
-        //             }),
-        //         },
-        //         { merge: true },
-        //     )
-        //     .then(() => {
-        //         console.log("Added task to project");
-        //     })
-        //     .catch(e => {
-        //         console.log(e);
-        //     });
-
         Promise.all([updateInTasks, updateInTasksLists])
             .then(() => updateTasks())
             .catch(e => console.log(e));
@@ -151,12 +128,12 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
 
         const oldColDocRef = db
             .collection("projects")
-            .doc(activeProject)
+            .doc(activeProject.id)
             .collection("tasksLists")
             .doc(columnId);
         const newColDocRef = db
             .collection("projects")
-            .doc(activeProject)
+            .doc(activeProject.id)
             .collection("tasksLists")
             .doc(colId);
 
@@ -189,8 +166,6 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
                     } else {
                         newTasks = [data];
                     }
-
-                    console.log("NEW", newTasks);
 
                     transaction.update(newColDocRef, { tasks: newTasks });
                 })

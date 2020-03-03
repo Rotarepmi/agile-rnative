@@ -42,9 +42,8 @@ const TaskDetailsView: React.FC<Props> = ({
     handleSave,
     setDetailsVisible,
 }) => {
-
     if (!task) return null;
-    
+
     return (
         <Modal animationType="fade" transparent={false} visible={detailsVisible}>
             <View>
@@ -67,13 +66,17 @@ const TaskDetailsView: React.FC<Props> = ({
                         onChangeText={(value: string) => setTitle(value)}
                         onEndEditing={handleSave}
                     />
+
                     <Text>Created: {formatDistanceToNow(task.creationDate.toDate())} ago</Text>
+
                     {task.modifyDate && <Text>Modified: {formatDistanceToNow(task.modifyDate.toDate())} ago</Text>}
+
                     <Picker selectedValue={newColumnId} onValueChange={value => handleColumnChange(value)}>
                         {columns.map(c => (
                             <Picker.Item label={c.name} value={c.id} key={c.id} />
                         ))}
                     </Picker>
+
                     <TextInput
                         style={styles.description}
                         multiline

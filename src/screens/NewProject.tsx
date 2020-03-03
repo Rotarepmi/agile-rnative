@@ -28,21 +28,22 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
         const user = firebase.auth().currentUser;
         const newProjectRef = db.collection("projects").doc();
 
-        const createProject = newProjectRef
-            .set({
-                name: projectName,
-                description: projectDesc,
-                users: [
-                    {
-                        id: user.uid,
-                        name: user.displayName,
-                    },
-                ],
-                owner: user.uid,
-            })
-            .catch(e => {
-                setErrorMessage(e.message);
-            });
+        const newProjectData = {
+            id: newProjectRef.id,
+            name: projectName,
+            description: projectDesc,
+            users: [
+                {
+                    id: user.uid,
+                    name: user.displayName,
+                },
+            ],
+            owner: user.uid,
+        };
+
+        const createProject = newProjectRef.set(newProjectData).catch(e => {
+            setErrorMessage(e.message);
+        });
 
         const createBacklog = newProjectRef
             .collection("tasksLists")
@@ -108,9 +109,9 @@ const NewProject: React.FC<Props> = ({ navigation }) => {
         Promise.all([createProject, createBacklog, createInProgress, createTesting, createDone, updateUsers])
             .then(() => {
                 setLoading(false);
-                dispatch(setActiveProject(newProjectRef.id));
+                dispatch(setActiveProject(newProjectData));
                 navigation.navigate("ProjectStack", { projectId: newProjectRef.id, routeName: projectName });
-                ToastAndroid.show("Project created", ToastAndroid.SHORT)
+                ToastAndroid.show("Project created", ToastAndroid.SHORT);
             })
             .catch(e => {
                 setLoading(false);
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         padding: 5,
         borderRadius: 5,
-        textAlignVertical: "top"
+        textAlignVertical: "top",
     },
     btnWrapper: {
         marginTop: 10,

@@ -11,27 +11,30 @@ const KanbanBoardContainer: React.FC = () => {
     const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(true);
-
+    
     useEffect(() => {
-        const unsubscribe = db
-            .collection("projects")
-            .doc(activeProject)
-            .collection("tasksLists")
-            .orderBy("place")
-            .onSnapshot(querySnapshot => {
-                // var source = querySnapshot.metadata.hasPendingWrites ? "Local" : "Server";
+        console.log(activeProject)
+        if (activeProject) {
+            const unsubscribe = db
+                .collection("projects")
+                .doc(activeProject.id)
+                .collection("tasksLists")
+                .orderBy("place")
+                .onSnapshot(querySnapshot => {
+                    // var source = querySnapshot.metadata.hasPendingWrites ? "Local" : "Server";
 
-                let cols = [];
+                    let cols = [];
 
-                querySnapshot.forEach(result => {
-                    cols.push({ id: result.id, ...result.data() });
+                    querySnapshot.forEach(result => {
+                        cols.push({ id: result.id, ...result.data() });
+                    });
+
+                    dispatch(tasksFetchSuccess(cols));
+                    setLoading(false);
                 });
 
-                dispatch(tasksFetchSuccess(cols));
-                setLoading(false);
-            });
-
-        return () => unsubscribe();
+            return () => unsubscribe();
+        }
     }, [activeProject]);
 
     return <KanbanBoardView columns={columns} loading={loading} />;

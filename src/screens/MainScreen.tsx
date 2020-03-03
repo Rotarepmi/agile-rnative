@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { NavigationSwitchProp, FlatList } from "react-navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,10 +25,6 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
         const currentUser = firebase.auth().currentUser;
         isMounted && setCurrentUser(currentUser);
 
-        db.collection("users")
-            .doc(currentUser.uid)
-            .onSnapshot(qSnap => console.log("QSNAP", qSnap.data()));
-
         return () => {
             setIsMounted(false);
         };
@@ -36,20 +32,30 @@ const MainScreen: React.FC<Props> = ({ navigation }) => {
 
     useEffect(() => {
         if (currentUser) {
-            db.collection("users")
+            const unsubscribe = db
+                .collection("users")
                 .doc(currentUser.uid)
                 .onSnapshot(qSnap => {
                     const projects = qSnap.data().projects;
                     projects.length && setUserProjects(projects);
                 });
-            // .catch(e => console.log(e));
+
+            return () => unsubscribe();
         }
     }, [currentUser]);
 
-    function handleProjectPress(id: any, name: any) {
-        dispatch(setActiveProject(id));
+    const handleProjectPress = useCallback((id: string, name: string) => {
+        db.collection("projects")
+            .doc(id)
+            .onSnapshot(qSnap => {
+                const projData = qSnap.data();
+                const { description, name, owner, users } = projData;
+
+                dispatch(setActiveProject({ id, description, name, owner, users }));
+            });
+
         navigation.navigate("ProjectStack", { projectId: id, routeName: name });
-    }
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -110,7 +116,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         marginTop: 10,
         marginBottom: 10,
-        borderRadius: 3
+        borderRadius: 3,
     },
     listItemText: {
         textAlign: "center",

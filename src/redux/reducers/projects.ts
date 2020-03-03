@@ -6,7 +6,8 @@ export const projects = (state = initialState, action) => {
     switch (action.type) {
         case "SET_ACTIVE_PROJECT":
             return {
-                activeProject: action.projectId,
+                ...state,
+                activeProject: action.payload.project,
             }
         default:
             return state
