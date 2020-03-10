@@ -191,6 +191,7 @@ const TaskDetailsContainer: React.FC<Props> = ({ data, detailsVisible, columnId,
             detailsVisible={detailsVisible}
             handleSave={handleSave}
             setDetailsVisible={setDetailsVisible}
+            users={activeProject.users}
         />
     );
 };

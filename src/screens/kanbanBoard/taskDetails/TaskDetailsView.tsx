@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Column } from "../../../utils/Types";
 import { firestore } from "firebase";
+import { theme } from "../../../utils/theme";
 
 interface Props {
     task:
@@ -13,6 +14,7 @@ interface Props {
               description: string;
               creationDate: firestore.Timestamp;
               modifyDate: firestore.Timestamp;
+              assignedUser: string;
           }
         | undefined;
     description: string;
@@ -21,6 +23,7 @@ interface Props {
     columns: Column[];
     columnId: Column["id"];
     newColumnId: Column["id"];
+    users: { id: string; name: string }[];
     handleColumnChange: (value: Column["id"]) => void;
     setDescription: (value: string) => void;
     setTitle: (value: string) => void;
@@ -36,6 +39,7 @@ const TaskDetailsView: React.FC<Props> = ({
     columns,
     columnId,
     newColumnId,
+    users,
     handleColumnChange,
     setDescription,
     setTitle,
@@ -46,7 +50,7 @@ const TaskDetailsView: React.FC<Props> = ({
 
     return (
         <Modal animationType="fade" transparent={false} visible={detailsVisible}>
-            <View>
+            <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableHighlight style={styles.closeBtn} onPress={setDetailsVisible}>
                         <View style={styles.closeBtn}>
@@ -62,6 +66,7 @@ const TaskDetailsView: React.FC<Props> = ({
                     <TextInput
                         style={styles.title}
                         multiline
+                        maxLength={54}
                         value={title}
                         onChangeText={(value: string) => setTitle(value)}
                         onEndEditing={handleSave}
@@ -87,11 +92,25 @@ const TaskDetailsView: React.FC<Props> = ({
                     />
                 </View>
             </View>
+            <View style={styles.pickerWrapper}>
+                <Text style={styles.label}>Assign teammate:</Text>
+                <Picker selectedValue={task.assignedUser}>
+                    <Picker.Item label="unassigned" value={null} />
+                    {users.map(u => (
+                        <Picker.Item label={u.name} value={u.id} key={u.id} />
+                    ))}
+                </Picker>
+            </View>
         </Modal>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingBottom: 170,
+        position: "relative",
+    },
     header: {
         borderBottomWidth: 1,
         borderBottomColor: "#999",
@@ -118,8 +137,17 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     description: {
-        paddingTop: 20,
+        paddingTop: 0,
         paddingBottom: 20,
+    },
+    pickerWrapper: {
+        flex: 0,
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
+    label: {
+        paddingLeft: 8,
+        color: theme.shadowDark,
     },
 });
 
